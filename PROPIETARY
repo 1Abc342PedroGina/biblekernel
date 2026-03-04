@@ -134,6 +134,116 @@ Individual commercial licenses for proprietary versions may be negotiated
 on a case-by-case basis.
 
 =============================================================================
+                    BIBLE KERNEL (BK) - COPYING ADVISE
+=============================================================================
+
+Copyright (c) 2026, Pedro Emanuel, Brazil
+
+This file contains IMPORTANT ADVISES, not the full license.
+For complete legal terms, see:
+  - LICENSE_MIT  (for open versions under MIT license)
+  - PROPIETAREY  (for proprietary versions)
+
+=============================================================================
+                              GENERAL NOTICE
+=============================================================================
+
+The Bible Kernel (BK) uses a dual licensing model with a specific release cycle.
+ 
+PRE-1.3 VERSIONS (Current development):
+  These versions are OPEN SOURCE and distributed under the MIT license.
+  See LICENSE_MIT for full terms.
+
+VERSION 1.3 AND SELECTED VERSIONS:
+  Version 1.3 is PROPRIETARY. See PROPIETAREY for terms.
+  Other proprietary versions exist between open releases.
+
+OPEN RELEASES (Under MIT license):
+  - Version 2.1
+  - Version 3.0
+  - Version 4.7
+  - Version 5.7
+  - Version 6.4
+  - Version 7.0
+  - Version 8.7
+  - Version 9.2
+
+FUTURE RE-OPENING:
+  Version 10.1 build 17000 will be OPEN AGAIN under the MIT license,
+  without delay, continuing the cycle.
+
+=============================================================================
+                    CONTRIBUTIONS AND MODIFICATIONS
+=============================================================================
+
+If you are a "big" entity (Example: Apple, Google) or a "nerd" 
+(Example: David Cutcler), and you make modifications to this code:
+
+1. If you release your modifications FOR FREE in this directory structure,
+   the license for your modifications shall be the MIT license 
+   (see LICENSE_MIT).
+
+2. This applies regardless of whether the base version is currently open
+   or proprietary, as long as you choose to place your code here.
+
+3. "This directory structure" means the official Bible Kernel source tree,
+   following the same organization and preserving all credits and advises.
+
+=============================================================================
+                         PROPRIETARY VERSIONS
+=============================================================================
+
+The file PROPIETAREY indicates which versions are proprietary and contains
+the terms for using those versions.
+
+All proprietary versions WILL BECOME OPEN AGAIN in future releases,
+specifically version 10.1 build 17000 and potentially other versions
+following the established cycle.
+
+=============================================================================
+                              REMINDER
+=============================================================================
+
+Can this code become closed? 
+    YES. (Version 1.3 and selected versions are proprietary)
+
+But can it be reopened? 
+    YES, and it will be, in version 10.1 build 17000, without delay.
+
+That's because I was the one who initially produced the code and conceived 
+the idea, and I will give special thanks to everyone, regardless of whether 
+it's free or paid, especially since my pockets are empty.
+
+=============================================================================
+                         FAITH AND RESPECT CLAUSE
+=============================================================================
+
+The Bible Kernel (BK) is created by a Christian developer.
+
+While the code is open for contributions from people of all faiths and beliefs,
+the following are **NOT PERMITTED**:
+
+- Any code comments, documentation, or assets that mock, criticize, or satirize
+  Christianity or Christian beliefs
+- Any modifications that introduce anti-Christian messages
+- Any contributions that ridicule biblical references or concepts
+
+The name "Bible Kernel" and biblical references in the code (such as the 
+"bible/" directory) are used respectfully and shall remain as such.
+
+This is not about excluding other views - it's about ensuring this project
+remains a space where the creator's faith is respected.
+
+Contributions that violate this will be rejected or removed.
+
+=============================================================================
+                              SCRIPTURE
+=============================================================================
+
+"Whatever you do, work at it with all your heart, as working for the Lord."
+- Colossians 3:23
+
+=============================================================================
                     This is proprietary software with a promise.
               It is closed now, but WILL reopen in version 10.1.
                    Especially since my pockets are empty.
