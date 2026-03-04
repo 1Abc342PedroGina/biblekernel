@@ -6,7 +6,7 @@ Copyright (c) 2026, Pedro Emanuel, Brazil
 
 This file contains IMPORTANT ADVISES, not the full license.
 For complete legal terms, see:
-  - LICENSE_MIT  (for open versions under MIT license)
+  - LICENSE  (for open versions under MIT license)
   - PROPIETAREY  (for proprietary versions)
 
 =============================================================================
@@ -78,6 +78,35 @@ But can it be reopened?
 That's because I was the one who initially produced the code and conceived 
 the idea, and I will give special thanks to everyone, regardless of whether 
 it's free or paid, especially since my pockets are empty.
+
+=============================================================================
+                         FAITH AND RESPECT CLAUSE
+=============================================================================
+
+The Bible Kernel (BK) is created by a Christian developer.
+
+While the code is open for contributions from people of all faiths and beliefs,
+the following are **NOT PERMITTED**:
+
+- Any code comments, documentation, or assets that mock, criticize, or satirize
+  Christianity or Christian beliefs
+- Any modifications that introduce anti-Christian messages
+- Any contributions that ridicule biblical references or concepts
+
+The name "Bible Kernel" and biblical references in the code (such as the 
+"bible/" directory) are used respectfully and shall remain as such.
+
+This is not about excluding other views - it's about ensuring this project
+remains a space where the creator's faith is respected.
+
+Contributions that violate this will be rejected or removed.
+
+=============================================================================
+                              SCRIPTURE
+=============================================================================
+
+"Whatever you do, work at it with all your heart, as working for the Lord."
+- Colossians 3:23
 
 =============================================================================
                     This is free software with a future.
