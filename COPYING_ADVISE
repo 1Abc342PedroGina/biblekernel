@@ -14,10 +14,10 @@ For complete legal terms, see:
 =============================================================================
 
 The Bible Kernel (BK) uses a dual licensing model with a specific release cycle.
-
+ 
 PRE-1.3 VERSIONS (Current development):
   These versions are OPEN SOURCE and distributed under the MIT license.
-  See LICENSE_MIT for full terms.
+  See LICENSE for full terms.
 
 VERSION 1.3 AND SELECTED VERSIONS:
   Version 1.3 is PROPRIETARY. See PROPIETAREY for terms.
@@ -46,7 +46,7 @@ If you are a "big" entity (Example: Apple, Google) or a "nerd"
 
 1. If you release your modifications FOR FREE in this directory structure,
    the license for your modifications shall be the MIT license 
-   (see LICENSE_MIT).
+   (see LICENSE).
 
 2. This applies regardless of whether the base version is currently open
    or proprietary, as long as you choose to place your code here.
