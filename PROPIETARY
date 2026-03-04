@@ -1,0 +1,139 @@
+=============================================================================
+                    BIBLE KERNEL (BK) - PROPIETAREY
+=============================================================================
+
+This file contains the terms for PROPRIETARY VERSIONS of the Bible Kernel.
+For open versions under MIT license, see LICENSE.
+For important advises, see COPYING_ADVISE.
+
+=============================================================================
+                      WHICH VERSIONS ARE PROPRIETARY
+=============================================================================
+
+The following versions are PROPRIETARY and governed by this agreement:
+
+1. VERSION 1.3 (and all subsequent 1.x releases until the next open version)
+2. All versions between open releases (e.g., 2.2 through 2.9, 3.1 through 3.9, etc.)
+3. Any version not explicitly listed as "OPEN" in COPYING_ADVISE
+
+OPEN VERSIONS (under MIT license) are:
+  - 2.1, 3.0, 4.7, 5.7, 6.4, 7.0, 8.7, 9.2
+  - Pre-1.3 versions (current development)
+  - Version 10.1 build 17000 (future)
+
+=============================================================================
+                         PROPRIETARY LICENSE TERMS
+=============================================================================
+
+1. GRANT OF LICENSE
+   -----------------
+   Subject to the terms of this PROPIETAREY, the author grants you a
+   non-exclusive, non-transferable, worldwide license to:
+   
+   a) Use the proprietary versions for internal testing and development
+   b) Integrate the proprietary versions into your products
+   c) Distribute the proprietary versions as part of your products
+   d) Modify the proprietary versions for your own needs
+
+2. RESTRICTIONS
+   -------------
+   You may NOT:
+   
+   a) Distribute the proprietary versions in source code form
+   b) Release the proprietary versions publicly under any open source license
+   c) Remove or alter any copyright notices or proprietary markings
+   d) Use the proprietary versions to create competing kernels
+   e) Sublicense, rent, or lease the proprietary versions
+
+3. COMMERCIAL USE
+   ---------------
+   If you are a commercial entity (including but not limited to Apple, Google,
+   Microsoft, etc.) and wish to use proprietary versions in commercial products,
+   you must:
+   
+   a) Maintain proper attribution in your product documentation
+   b) Not claim that you created the kernel
+   c) Provide feedback on bugs and improvements to the author
+   d) Consider sponsoring the author (optional but appreciated, 
+      especially since my pockets are empty)
+
+4. CONTRIBUTIONS TO PROPRIETARY VERSIONS
+   --------------------------------------
+   If you contribute code to proprietary versions:
+   
+   a) You grant the author a perpetual, irrevocable, worldwide, royalty-free
+      license to use your contributions in both proprietary and open versions
+   b) Your contributions may become open when the version reopens
+   c) You will be credited in the contributors list
+
+5. FUTURE RE-OPENING
+   ------------------
+   ALL PROPRIETARY VERSIONS WILL BECOME OPEN in version 10.1 build 17000
+   or in subsequent designated open releases, without delay.
+   
+   This means:
+   - Version 1.3 (proprietary) → becomes open at 10.1 build 17000
+   - All proprietary code → becomes open at designated future versions
+   - You retain rights to use the now-open code under MIT license
+
+=============================================================================
+                    CONTRIBUTIONS FROM "BIG" AND "NERD"
+=============================================================================
+
+If you are a "big" entity (Example: Apple, Google, Microsoft, etc.) 
+or a "nerd" (Example: David Cutcler, Linus Torvalds, etc.), and you make 
+modifications to this code:
+
+1. If you release your modifications FOR FREE in the official Bible Kernel
+   directory structure (following the same organization and preserving all
+   credits and advises), your modifications shall be licensed under the
+   MIT license (see LICENSE_MIT), regardless of whether the base version
+   is currently proprietary.
+
+2. This creates a "safe harbor" for contributions that are meant to be free:
+   place them in the official tree with proper attribution, and they remain
+   free forever (MIT), even if the surrounding code is proprietary.
+
+3. The author guarantees that any code placed in the official tree with
+   proper attribution will never be re-licensed to remove your freedoms,
+   even when proprietary versions are released.
+
+=============================================================================
+                         NO WARRANTY / LIABILITY
+=============================================================================
+
+THE PROPRIETARY VERSIONS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+=============================================================================
+                              ACKNOWLEDGMENT
+=============================================================================
+
+By using a proprietary version of the Bible Kernel, you acknowledge that:
+
+- You have read and understood this PROPIETAREY
+- You accept the terms and restrictions herein
+- You understand that this version WILL BECOME OPEN in the future
+- You respect the author's rights and the chosen licensing model
+
+=============================================================================
+                         CONTACT AND COMMERCIAL TERMS
+=============================================================================
+
+For commercial licensing inquiries, special arrangements, or volume discounts,
+contact the author through GitHub or other channels.
+
+Individual commercial licenses for proprietary versions may be negotiated
+on a case-by-case basis.
+
+=============================================================================
+                    This is proprietary software with a promise.
+              It is closed now, but WILL reopen in version 10.1.
+                   Especially since my pockets are empty.
+=============================================================================
