@@ -5,7 +5,7 @@
 #include <bible/types.h>
 
 /*
- * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-License-Identifier: MIT License
  *
  * Copyright (c) 2024 Bible System Developers
  * Todos os direitos reservados.
@@ -253,5 +253,6 @@ static __BK_ALWAYS_INLINE BK_UI32 bk_bswap32(BK_UI32 x) {
 static __BK_ALWAYS_INLINE BK_UI16 bk_bswap16(BK_UI16 x) {
 	return __bk_byte_swap_word(x);
 }
+
 
 #endif /* !_BIBLE_ENDIAN_H_ */
