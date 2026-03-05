@@ -41,8 +41,2114 @@ ctx_user
 ctx_kern
 ctx_bk;
 
-Line 1250-1400:
+Line 1250-1700:
+switch_ctx;
+
+Line 1750-1900:
 ctx_init
 ctx_end;
 
 end;
+
+proc/sched_prim.c:
+proc/sched_prim.c:
+Line 1-150 Class:
+sched_eevdf_struct
+
+Line 151-300 Funcs:
+eevdf_init:
+	init_rq_eevdf
+	init_task_eevdf
+	init_sched_data
+	init_timers;
+eevdf_start:
+	start_sched_clock
+	enable_eevdf
+	activate_scheduler;
+eevdf_stop:
+	stop_sched_clock
+	disable_eevdf
+	deactivate_scheduler
+	flush_queues;
+
+Line 301-450 Funcs:
+eevdf_enqueue:
+	enqueue_task_eevdf
+	update_tree_on_enqueue
+	calc_vruntime_on_enqueue
+	set_deadline_on_enqueue
+	update_load_on_enqueue;
+eevdf_dequeue:
+	dequeue_task_eevdf
+	update_tree_on_dequeue
+	recalc_vruntime_on_dequeue
+	update_load_on_dequeue;
+eevdf_pick:
+	pick_next_task_eevdf
+	find_leftmost_entity
+	get_min_deadline
+	select_optimal_task;
+
+Line 451-600 Funcs:
+eevdf_tick_handler:
+	tick_task_eevdf
+	update_curr_on_tick
+	check_preempt_on_tick
+	update_stats_on_tick
+	trigger_resched_if_needed;
+eevdf_yield_handler:
+	yield_task_eevdf
+	reinsert_current_task
+	update_deadline_on_yield
+	resched_curr;
+eevdf_wakeup:
+	wakeup_preempt_eevdf
+	place_entity_on_wakeup
+	update_load_on_wakeup
+	check_preempt_on_wakeup;
+
+Line 601-750 Funcs:
+eevdf_priority_calc:
+	calc_prio_weight
+	weight_to_prio
+	prio_to_weight
+	calc_prio_delta;
+eevdf_weight_adj:
+	adjust_task_weight
+	update_load_weight
+	recalc_entity_weight
+	set_user_weight;
+eevdf_deadline_upd:
+	calc_deadline
+	update_min_deadline
+	set_entity_deadline
+	adjust_deadline_on_slice;
+
+Line 751-900 Funcs:
+eevdf_load_calc:
+	calc_cpu_load
+	calc_runnable_load
+	calc_avg_load
+	update_load_avg;
+eevdf_balance_cpu:
+	find_busiest_queue
+	find_idlest_cpu
+	calculate_imbalance
+	fixup_imbalance;
+eevdf_migrate_check:
+	can_migrate_task
+	should_migrate
+	find_migration_target
+	check_migration_cost;
+
+Line 901-1050 Funcs:
+eevdf_tree_insert:
+	rb_insert_eevdf
+	update_tree_properties
+	fix_colors_on_insert
+	rebalance_after_insert;
+eevdf_tree_remove:
+	rb_remove_eevdf
+	update_successor
+	fix_colors_on_remove
+	rebalance_after_remove;
+eevdf_tree_update:
+	update_key_value
+	update_tree_position
+	move_entity_in_tree
+	recalc_tree_metrics;
+
+Line 1051-1200 Funcs:
+eevdf_stat_rq:
+	collect_rq_stats
+	calc_rq_depth
+	avg_rq_load
+	rq_waiting_tasks;
+eevdf_stat_task:
+	task_wait_time
+	task_runtime
+	task_slice_usage
+	task_preempt_count;
+eevdf_stat_cpu:
+	cpu_busy_time
+	cpu_idle_time
+	cpu_nr_running
+	per_cpu_load;
+
+Line 1201-1350 Funcs:
+eevdf_latency_calc:
+	calc_sys_latency
+	calc_target_latency
+	update_latency_ns
+	get_latency_limit;
+eevdf_timeslice_get:
+	calc_timeslice
+	get_min_slice
+	get_max_slice
+	scale_slice_by_weight;
+eevdf_preempt_check:
+	should_preempt_curr
+	check_preempt_tick
+	check_preempt_wakeup
+	check_preempt_yield;
+
+Line 1351-1500 Funcs:
+eevdf_cfs_compare:
+	compare_vruntime
+	compare_deadline
+	compare_weighted_prio
+	entity_less_than;
+eevdf_rbt_leftmost:
+	get_leftmost_entity
+	get_next_entity
+	get_prev_entity
+	walk_tree_inorder;
+eevdf_entity_less:
+	vruntime_less
+	deadline_less
+	key_less_than
+	entity_before;
+
+Line 1501-1650 Funcs:
+eevdf_account_cputime:
+	account_user_time
+	account_system_time
+	account_steal_time
+	account_idle_time;
+eevdf_account_wait:
+	account_wait_start
+	account_wait_end
+	update_wait_stats
+	calc_iowait;
+eevdf_account_preempt:
+	count_preemptions
+	account_preempt_time
+	update_preempt_stats
+	reset_preempt_count;
+
+Line 1651-1800 Funcs:
+eevdf_update_curr:
+	update_curr_vruntime
+	update_curr_load
+	update_curr_deadline
+	update_curr_exec_time;
+eevdf_update_sched:
+	update_sched_info
+	refresh_sched_params
+	apply_sched_updates
+	sync_sched_state;
+eevdf_update_deadline:
+	calc_new_deadline
+	update_deadline_interval
+	set_next_deadline
+	adjust_deadline_on_wake;
+
+Line 1801-1950 Funcs:
+eevdf_debug_check:
+	validate_tree_structure
+	check_entity_integrity
+	verify_load_sum
+	assert_sched_invariants;
+eevdf_debug_dump:
+	dump_runqueue
+	dump_task_list
+	dump_tree_graph
+	dump_all_entities;
+eevdf_debug_validate:
+	validate_vruntime_order
+	validate_deadline_order
+	check_load_consistency
+	verify_accounting;
+
+Line 1951-2100 Funcs:
+eevdf_ops_register:
+	add_sched_ops
+	register_eevdf_ops
+	set_sched_class
+	init_sched_class;
+eevdf_ops_unregister:
+	remove_sched_ops
+	unregister_eevdf_ops
+	clear_sched_class;
+eevdf_ops_exec:
+	call_sched_op
+	execute_switch_op
+	run_sched_hook
+	trigger_sched_callback;
+
+Line 2101-2250 Funcs:
+eevdf_param_set:
+	set_sched_param
+	set_priority_param
+	set_weight_param
+	set_latency_param;
+eevdf_param_get:
+	get_sched_param
+	get_user_priority
+	get_effective_weight
+	get_current_latency;
+eevdf_param_default:
+	reset_to_default
+	init_default_params
+	apply_boot_params
+	set_sysctl_defaults;
+
+Line 2251-2400 Funcs:
+eevdf_idle_task:
+	run_idle_loop
+	enter_idle_state
+	exit_idle_state
+	account_idle_ticks;
+eevdf_rt_task:
+	handle_rt_entity
+	boost_rt_priority
+	adjust_for_rt
+	restore_after_rt;
+eevdf_batch_task:
+	set_batch_mode
+	calc_batch_timeslice
+	handle_batch_sleep
+	adjust_batch_prio;
+
+Line 2401-2550 Funcs:
+eevdf_overrun_check:
+	detect_deadline_overrun
+	handle_overrun_task
+	reset_on_overrun
+	account_overrun_stats;
+
+Line 2551-2700 Funcs:
+eevdf_throttle:
+	throttle_cfs_rq
+	unthrottle_cfs_rq
+	throttle_entity
+	check_throttled;
+eevdf_contrib:
+	calc_contrib
+	scale_contrib
+	update_contrib_sum
+	accumulate_contrib;
+
+Line 2701-2850 Funcs:
+eevdf_period:
+	start_period
+	end_period
+	update_period
+	calc_period_elapsed;
+eevdf_entity:
+	alloc_entity
+	free_entity
+	init_entity
+	destroy_entity;
+
+Line 2851-3000 Funcs:
+eevdf_group:
+	init_task_group
+	add_to_group
+	remove_from_group
+	update_group_shares;
+eevdf_bandwidth:
+	init_bandwidth
+	update_bandwidth
+	distribute_bandwidth
+	return_bandwidth;
+
+Line 3001-3150 Funcs:
+eevdf_cfs_rq:
+	init_cfs_rq
+	update_cfs_rq
+	clean_cfs_rq
+	destroy_cfs_rq;
+eevdf_rq:
+	lock_rq
+	unlock_rq
+	double_lock_rq
+	double_unlock_rq;
+
+Line 3151-3300 Funcs:
+eevdf_clock:
+	update_rq_clock
+	update_sched_clock
+	get_rq_clock
+	get_sched_clock;
+eevdf_time:
+	update_curr_time
+	account_time_ns
+	calc_time_delta
+	normalize_time;
+
+Line 3301-3450 Funcs:
+eevdf_wake:
+	try_to_wake_up
+	default_wake_function
+	autoremove_wake_function
+	wake_up_process;
+eevdf_sleep:
+	try_to_sleep
+	do_sleep_on
+	interruptible_sleep
+	uninterruptible_sleep;
+
+Line 3451-3600 Funcs:
+eevdf_fork:
+	sched_fork
+	sched_post_fork
+	init_new_task_load
+	copy_sched_attrs;
+eevdf_exec:
+	sched_exec
+	update_exec_load
+	reset_on_exec
+	recalc_on_exec;
+
+Line 3601-3750 Funcs:
+eevdf_exit:
+	sched_exit
+	cleanup_task_load
+	release_sched_data
+	unlink_sched_entity;
+eevdf_wait:
+	wait_for_completion
+	wait_for_completion_timeout
+	wait_for_completion_interruptible
+	complete_all;
+
+Line 3751-3900 Funcs:
+eevdf_proc:
+	show_schedstat
+	show_schedinfo
+	show_sched_debug
+	proc_sched_show_task;
+eevdf_sysctl:
+	sched_sysctl_handler
+	sched_rr_handler
+	sched_rt_handler
+	sched_autogroup_handler;
+
+Line 3901-4050 Funcs:
+eevdf_nohz:
+	nohz_balancer_kick
+	nohz_newidle_balance
+	nohz_idle_balance
+	update_nohz_stats;
+eevdf_isolate:
+	isolate_cpu
+	deisolate_cpu
+	task_move_to_isolated
+	check_isolated;
+
+Line 4051-4200 Funcs:
+eevdf_energy:
+	energy_aware_enqueue
+	energy_aware_dequeue
+	calc_energy_cost
+	energy_aware_pick;
+eevdf_perf:
+	perf_event_task_sched_in
+	perf_event_task_sched_out
+	perf_event_task_tick
+	perf_sched_cb_inc;
+
+Line 4201-4350 Funcs:
+eevdf_cgroup:
+	cgroup_attach_task
+	cgroup_can_attach
+	cgroup_cancel_attach
+	cgroup_post_attach;
+eevdf_namespace:
+	init_sched_ns
+	copy_sched_ns
+	free_sched_ns
+	switch_sched_ns;
+
+Line 4351-4500 Funcs:
+eevdf_plist:
+	plist_add_entity
+	plist_del_entity
+	plist_requeue
+	plist_update_prio;
+eevdf_prio:
+	effective_prio
+	normal_prio
+	rt_prio
+	set_user_nice;
+
+Line 4501-4650 Funcs:
+eevdf_affinity:
+	set_cpus_allowed
+	check_affinity
+	force_migrate_affinity
+	restore_affinity;
+eevdf_dl:
+	dl_task_check
+	dl_task_migrate
+	dl_task_timer
+	dl_task_overflow;
+
+Line 4651-4800 Funcs:
+eevdf_thermal:
+	thermal_pressure_update
+	thermal_enqueue
+	thermal_dequeue
+	thermal_throttle;
+eevdf_irq:
+	irqtime_account
+	irqtime_account_hi
+	irqtime_account_si
+	irqtime_account_tick;
+
+Line 4801-4950 Funcs:
+eevdf_softirq:
+	softirq_account
+	raise_softirq_sched
+	do_softirq_sched
+	trigger_sched_softirq;
+eevdf_taskgroup:
+	alloc_task_group
+	free_task_group
+	add_to_task_group
+	remove_from_task_group;
+
+Line 4951-5100+ Funcs:
+eevdf_core:
+	__schedule
+	schedule
+	schedule_preempt_disabled
+	schedule_idle
+	preempt_schedule
+	preempt_schedule_irq
+	schedule_tail
+	context_switch
+	prepare_task_switch
+	finish_task_switch;
+
+end;
+
+proc/sched_mach.c:
+Line 1-50 Class:
+mach_task_struct
+mach_thread_struct
+mach_port_struct
+mach_ipc_struct
+mach_vm_struct;
+
+Line 51-100 Funcs:
+mach_to_bk_init:
+	init_mach_translator
+	init_mach_bk_mapping
+	init_translation_tables
+	register_mach_handlers;
+
+Line 101-150 Funcs:
+mach_task_translate:
+	mach_task_to_bk_task
+	convert_mach_task_attrs
+	translate_mach_task_priv
+	map_mach_task_ports
+	remap_mach_task_vm;
+mach_task_import:
+	import_mach_task
+	validate_mach_task
+	extract_mach_task_data
+	alloc_bk_from_mach;
+
+Line 151-200 Funcs:
+mach_thread_translate:
+	mach_thread_to_bk_thread
+	convert_mach_thread_state
+	translate_mach_thread_sched
+	map_mach_thread_exceptions
+	remap_mach_thread_stack;
+mach_thread_import:
+	import_mach_thread
+	validate_mach_thread
+	extract_mach_thread_regs
+	alloc_bk_thread_from_mach;
+
+Line 201-250 Funcs:
+mach_port_translate:
+	mach_port_to_bk_port
+	convert_mach_port_rights
+	translate_mach_port_msgs
+	map_mach_port_queue
+	remap_mach_port_receive;
+mach_port_import:
+	import_mach_port
+	validate_mach_port
+	extract_mach_port_cap
+	alloc_bk_port_from_mach;
+
+Line 251-300 Funcs:
+mach_vm_translate:
+	mach_vm_to_bk_vm
+	convert_mach_vm_prot
+	translate_mach_vm_map
+	map_mach_vm_regions
+	remap_mach_vm_shadow;
+mach_vm_import:
+	import_mach_vm
+	validate_mach_vm_map
+	extract_mach_vm_pages
+	alloc_bk_vm_from_mach;
+
+Line 301-350 Funcs:
+mach_ipc_translate:
+	mach_ipc_to_bk_ipc
+	convert_mach_ipc_msg
+	translate_mach_ipc_kmsg
+	map_mach_ipc_space
+	remap_mach_ipc_notify;
+mach_ipc_import:
+	import_mach_ipc
+	validate_mach_ipc
+	extract_mach_ipc_data
+	alloc_bk_ipc_from_mach;
+
+Line 351-400 Funcs:
+mach_sched_translate:
+	mach_sched_to_bk_sched
+	convert_mach_priority
+	translate_mach_policy
+	map_mach_sched_param
+	remap_mach_sched_attr;
+mach_sched_import:
+	import_mach_sched
+	validate_mach_sched
+	extract_mach_sched_data
+	alloc_bk_sched_from_mach;
+
+Line 401-450 Funcs:
+mach_exception_translate:
+	mach_exc_to_bk_exc
+	convert_mach_exc_code
+	translate_mach_exc_subcode
+	map_mach_exc_handler
+	remap_mach_exc_port;
+mach_exception_import:
+	import_mach_exception
+	validate_mach_exception
+	extract_mach_exc_data
+	alloc_bk_exc_from_mach;
+
+Line 451-500 Funcs:
+mach_time_translate:
+	mach_time_to_bk_time
+	convert_mach_abs_time
+	translate_mach_timebase
+	map_mach_calendar
+	remap_mach_delta;
+mach_time_import:
+	import_mach_time
+	validate_mach_time
+	extract_mach_time_data
+	alloc_bk_time_from_mach;
+
+end
+
+Line 501-550 Funcs:
+mach_task_iterate:
+	iterate_mach_tasks
+	collect_mach_task_list
+	filter_mach_tasks
+	snapshot_mach_tasks;
+mach_thread_iterate:
+	iterate_mach_threads
+	collect_mach_thread_list
+	filter_mach_threads
+	snapshot_mach_threads;
+
+Line 551-600 Funcs:
+mach_batch_translate:
+	batch_translate_tasks
+	batch_translate_threads
+	batch_translate_ports
+	batch_translate_vm
+	batch_import_all;
+mach_batch_commit:
+	commit_task_translations
+	commit_thread_translations
+	commit_port_translations
+	commit_vm_translations
+	atomic_transaction;
+
+Line 601-650 Funcs:
+mach_sync_translate:
+	sync_mach_state
+	sync_mach_sched
+	sync_mach_exceptions
+	sync_mach_ports
+	sync_mach_ipc;
+mach_sync_import:
+	import_sync_state
+	import_sync_sched
+	import_sync_exceptions
+	import_sync_ports
+	import_sync_ipc;
+
+Line 651-700 Funcs:
+mach_dep_create:
+	create_mach_dep_task
+	create_mach_dep_thread
+	create_mach_dep_port
+	create_mach_dep_vm
+	create_mach_dep_ipc;
+mach_dep_resolve:
+	resolve_task_deps
+	resolve_thread_deps
+	resolve_port_deps
+	resolve_vm_deps
+	resolve_ipc_deps;
+
+Line 701-750 Funcs:
+mach_attr_translate:
+	translate_task_attrs
+	translate_thread_attrs
+	translate_port_attrs
+	translate_vm_attrs
+	translate_ipc_attrs;
+mach_attr_import:
+	import_task_attrs
+	import_thread_attrs
+	import_port_attrs
+	import_vm_attrs
+	import_ipc_attrs;
+
+Line 751-800 Funcs:
+mach_state_save:
+	save_mach_task_state
+	save_mach_thread_state
+	save_mach_port_state
+	save_mach_vm_state
+	save_mach_ipc_state;
+mach_state_restore:
+	restore_to_mach_task
+	restore_to_mach_thread
+	restore_to_mach_port
+	restore_to_mach_vm
+	restore_to_mach_ipc;
+
+Line 801-850 Funcs:
+mach_validate:
+	validate_mach_task_integrity
+	validate_mach_thread_integrity
+	validate_mach_port_integrity
+	validate_mach_vm_integrity
+	validate_mach_ipc_integrity;
+mach_verify:
+	verify_task_translation
+	verify_thread_translation
+	verify_port_translation
+	verify_vm_translation
+	verify_ipc_translation;
+
+Line 851-900 Funcs:
+mach_cache:
+	cache_mach_task
+	cache_mach_thread
+	cache_mach_port
+	cache_mach_vm
+	cache_mach_ipc;
+mach_invalidate:
+	invalidate_task_cache
+	invalidate_thread_cache
+	invalidate_port_cache
+	invalidate_vm_cache
+	invalidate_ipc_cache;
+
+Line 901-950 Funcs:
+mach_lookup:
+	lookup_mach_task_by_pid
+	lookup_mach_thread_by_tid
+	lookup_mach_port_by_name
+	lookup_mach_vm_by_addr
+	lookup_mach_ipc_by_space;
+mach_resolve:
+	resolve_bk_to_mach_task
+	resolve_bk_to_mach_thread
+	resolve_bk_to_mach_port
+	resolve_bk_to_mach_vm
+	resolve_bk_to_mach_ipc;
+
+Line 951-1000 Funcs:
+mach_convert_end:
+	cleanup_mach_translator
+	free_translation_tables
+	unregister_mach_handlers
+	flush_all_translations
+	mach_translator_shutdown;
+
+end;
+
+proc/sched_unix.c:
+Line 1-60 Class:
+unix_proc_struct
+unix_thread_struct
+unix_cred_struct
+unix_filedesc_struct
+unix_vmspace_struct
+unix_sigacts_struct
+unix_itimers_struct;
+
+Line 61-120 Funcs:
+unix_to_bk_init:
+	init_unix_translator
+	init_unix_bk_mapping
+	init_sysv_tables
+	init_freebsd_tables
+	register_unix_handlers;
+
+Line 121-180 Funcs:
+unix_proc_translate:
+	sysv_proc_to_bk_proc
+	freebsd_proc_to_bk_proc
+	convert_unix_pid
+	translate_unix_cred
+	map_unix_filedesc
+	remap_unix_vmspace;
+unix_proc_import:
+	import_sysv_proc
+	import_freebsd_proc
+	validate_unix_proc
+	extract_unix_proc_data
+	alloc_bk_from_unix_proc;
+
+Line 181-240 Funcs:
+unix_thread_translate:
+	sysv_thread_to_bk_thread
+	freebsd_thread_to_bk_thread
+	convert_unix_tid
+	translate_unix_ksegrp
+	map_unix_mdthread
+	remap_unix_scheduler;
+unix_thread_import:
+	import_sysv_thread
+	import_freebsd_thread
+	validate_unix_thread
+	extract_unix_thread_regs
+	alloc_bk_thread_from_unix;
+
+Line 241-300 Funcs:
+unix_cred_translate:
+	unix_cred_to_bk_cred
+	convert_unix_uid
+	convert_unix_gid
+	translate_unix_groups
+	map_unix_loginclass
+	remap_unix_prison;
+unix_cred_import:
+	import_unix_cred
+	validate_unix_cred
+	extract_unix_cred_data
+	alloc_bk_cred_from_unix;
+
+Line 301-360 Funcs:
+unix_filedesc_translate:
+	unix_fd_to_bk_fd
+	convert_unix_ofiles
+	translate_unix_fdflags
+	map_unix_cwd
+	remap_unix_fdroot
+	translate_unix_fdlimit;
+unix_filedesc_import:
+	import_unix_filedesc
+	validate_unix_fdtable
+	extract_unix_fd_data
+	alloc_bk_fd_from_unix;
+
+Line 361-420 Funcs:
+unix_vm_translate:
+	unix_vmspace_to_bk_vm
+	convert_unix_map
+	translate_unix_vmprot
+	map_unix_vmmap
+	remap_unix_vmobj
+	translate_unix_vmentry;
+unix_vm_import:
+	import_unix_vmspace
+	validate_unix_vmmap
+	extract_unix_vm_pages
+	alloc_bk_vm_from_unix;
+
+Line 421-480 Funcs:
+unix_signal_translate:
+	unix_sig_to_bk_sig
+	convert_unix_sigact
+	translate_unix_sigmask
+	map_unix_sigstack
+	remap_unix_sigcode
+	translate_unix_sigtramp;
+unix_signal_import:
+	import_unix_sigacts
+	validate_unix_signal
+	extract_unix_sig_data
+	alloc_bk_sig_from_unix;
+
+Line 481-540 Funcs:
+unix_timer_translate:
+	unix_timer_to_bk_timer
+	convert_unix_itimers
+	translate_unix_timeval
+	map_unix_clock
+	remap_unix_interval
+	translate_unix_utrace;
+unix_timer_import:
+	import_unix_itimers
+	validate_unix_timer
+	extract_unix_time_data
+	alloc_bk_timer_from_unix;
+
+Line 541-600 Funcs:
+unix_resource_translate:
+	unix_rlimit_to_bk_rlimit
+	convert_unix_rusage
+	translate_unix_priority
+	map_unix_nice
+	remap_unix_rtprio
+	translate_unix_cpu sets;
+unix_resource_import:
+	import_unix_rlimits
+	validate_unix_rusage
+	extract_unix_rsrc_data
+	alloc_bk_rsrc_from_unix;
+
+Line 601-660 Funcs:
+unix_proc_iterate:
+	iterate_sysv_procs
+	iterate_freebsd_procs
+	collect_unix_proc_list
+	filter_unix_procs
+	snapshot_unix_procs
+	traverse_all_procs;
+unix_thread_iterate:
+	iterate_sysv_threads
+	iterate_freebsd_threads
+	collect_unix_thread_list
+	filter_unix_threads
+	snapshot_unix_threads;
+
+Line 661-720 Funcs:
+unix_batch_translate:
+	batch_translate_procs
+	batch_translate_threads
+	batch_translate_creds
+	batch_translate_filedesc
+	batch_translate_vmspace
+	batch_translate_sigacts;
+unix_batch_commit:
+	commit_proc_translations
+	commit_thread_translations
+	commit_cred_translations
+	commit_fd_translations
+	commit_vm_translations
+	atomic_unix_transaction;
+
+Line 721-780 Funcs:
+unix_state_translate:
+	translate_unix_procstate
+	translate_unix_threadstate
+	convert_unix_sleeplocks
+	map_unix_mutex
+	remap_unix_rwlock
+	translate_unix_condvar;
+unix_state_import:
+	import_unix_procstate
+	import_unix_threadstate
+	import_unix_locks
+	import_unix_condvars
+	sync_unix_state;
+
+Line 781-840 Funcs:
+unix_sched_translate:
+	unix_sched_to_bk_sched
+	convert_unix_tsleep
+	translate_unix_wakeup
+	map_unix_runqueue
+	remap_unix_sleepqueue
+	translate_unix_turnstile;
+unix_sched_import:
+	import_unix_sched
+	validate_unix_sched
+	extract_unix_sched_data
+	alloc_bk_sched_from_unix;
+
+Line 841-900 Funcs:
+unix_fork_translate:
+	translate_unix_fork
+	convert_unix_fork_return
+	map_unix_fork_parent
+	remap_unix_fork_child
+	translate_unix_rfork
+	import_unix_fork_result;
+unix_exec_translate:
+	translate_unix_execve
+	convert_unix_exec_args
+	map_unix_envp
+	remap_unix_interp
+	translate_unix_shebang
+	import_unix_exec_result;
+
+Line 901-960 Funcs:
+unix_exit_translate:
+	translate_unix_exit
+	convert_unix_exitcode
+	map_unix_wait
+	remap_unix_zombie
+	translate_unix_reap
+	import_unix_exit_status;
+unix_signals_translate:
+	translate_unix_kill
+	convert_unix_sigqueue
+	map_unix_sigwait
+	remap_unix_sigpending
+	translate_unix_suspend
+	import_unix_signal;
+
+Line 961-1020 Funcs:
+unix_ptrace_translate:
+	translate_unix_ptrace
+	convert_unix_traceme
+	map_unix_traceflags
+	remap_unix_traceevent
+	translate_unix_procfs
+	import_unix_ptrace_data;
+unix_debug_translate:
+	translate_unix_ktrace
+	convert_unix_truss
+	map_unix_ddb
+	remap_unix_gdb
+	translate_unix_kdump
+	import_unix_debug;
+
+Line 1021-1080 Funcs:
+unix_sysctl_translate:
+	translate_unix_sysctl
+	convert_unix_kerninfo
+	map_unix_vmmeter
+	remap_unix_uvmexp
+	translate_unix_stats
+	import_unix_sysctl_data;
+unix_jail_translate:
+	translate_unix_jail
+	convert_unix_prison
+	map_unix_jailid
+	remap_unix_jailroot
+	translate_unix_jailhost
+	import_unix_jail;
+
+Line 1081-1140 Funcs:
+unix_audit_translate:
+	translate_unix_audit
+	convert_unix_bsm
+	map_unix_auditrecord
+	remap_unix_auditevent
+	translate_unix_auditpipe
+	import_unix_audit;
+unix_mac_translate:
+	translate_unix_mac
+	convert_unix_label
+	map_unix_macpolicy
+	remap_unix_macflags
+	translate_unix_macctx
+	import_unix_mac;
+
+Line 1141-1200 Funcs:
+unix_compat_translate:
+	translate_sysv_ipc
+	convert_unix_shm
+	map_unix_sem
+	remap_unix_msg
+	translate_unix_svr4
+	import_sysv_compat;
+unix_linux_translate:
+	translate_linux_threads
+	convert_linux_clone
+	map_linux_tls
+	remap_linux_vsyscall
+	translate_linux_robust
+	import_linux_compat;
+
+Line 1201-1260 Funcs:
+unix_core_dump:
+	translate_unix_core
+	convert_unix_notes
+	map_unix_prstatus
+	remap_unix_fpreg
+	translate_unix_siginfo
+	import_unix_core;
+unix_coredump_import:
+	import_unix_corefile
+	validate_unix_core
+	extract_unix_core_data
+	reconstruct_unix_proc
+	restore_from_core;
+
+Line 1261-1320 Funcs:
+unix_procfs_export:
+	export_to_unix_procfs
+	generate_unix_status
+	format_unix_linfo
+	build_unix_maps
+	create_unix_fdinfo
+	write_unix_procfile;
+unix_sysvipc_export:
+	export_unix_shm_segs
+	export_unix_sem_arys
+	export_unix_msg_queues
+	format_unix_ipc_perms
+	show_unix_ipc_stats;
+
+Line 1321-1380 Funcs:
+unix_validate:
+	validate_unix_proc_integrity
+	validate_unix_thread_integrity
+	validate_unix_cred_integrity
+	validate_unix_fd_integrity
+	validate_unix_vm_integrity
+	validate_unix_signal_integrity;
+unix_verify:
+	verify_proc_translation
+	verify_thread_translation
+	verify_cred_translation
+	verify_fd_translation
+	verify_vm_translation
+	verify_signal_translation;
+
+Line 1381-1440 Funcs:
+unix_cache:
+	cache_unix_proc
+	cache_unix_thread
+	cache_unix_cred
+	cache_unix_filedesc
+	cache_unix_vmspace
+	cache_unix_sigacts;
+unix_invalidate:
+	invalidate_proc_cache
+	invalidate_thread_cache
+	invalidate_cred_cache
+	invalidate_fd_cache
+	invalidate_vm_cache
+	invalidate_signal_cache;
+
+Line 1441-1500 Funcs:
+unix_lookup:
+	lookup_unix_proc_by_pid
+	lookup_unix_thread_by_tid
+	lookup_unix_cred_by_uid
+	lookup_unix_fd_by_fd
+	lookup_unix_vm_by_addr
+	lookup_unix_sig_by_sig;
+unix_resolve:
+	resolve_bk_to_unix_proc
+	resolve_bk_to_unix_thread
+	resolve_bk_to_unix_cred
+	resolve_bk_to_unix_fd
+	resolve_bk_to_unix_vm
+	resolve_bk_to_unix_sig;
+
+Line 1501-1560 Funcs:
+unix_convert_end:
+	cleanup_unix_translator
+	free_unix_tables
+	unregister_unix_handlers
+	flush_unix_translations
+	unix_translator_shutdown
+	shutdown_all_converters;
+
+end;
+
+sched/sched_linux.c:
+Line 1-70 Class:
+linux_task_struct
+linux_thread_struct
+linux_cgroup_struct
+linux_css_set_struct
+linux_cgroup_subsys
+linux_sched_class
+linux_rq_struct
+linux_cfs_rq_struct
+linux_mm_struct
+linux_namespace_struct;
+
+Line 71-140 Funcs:
+linux_to_bible_init:
+	init_linux_translator
+	init_linux_bible_mapping
+	init_translation_tables
+	init_subsys_handlers
+	register_linux_hooks
+	init_per_cpu_translator;
+
+Line 141-210 Funcs:
+linux_task_translate:
+	linux_task_to_bible_task
+	convert_linux_pid
+	convert_linux_tgid
+	translate_linux_task_state
+	map_linux_task_flags
+	remap_linux_task_prio
+	translate_linux_static_prio
+	convert_linux_normal_prio
+	map_linux_rt_priority;
+linux_task_import:
+	import_linux_task
+	validate_linux_task
+	extract_linux_task_data
+	alloc_bible_from_linux_task
+	clone_bible_task_attrs;
+
+Line 211-280 Funcs:
+linux_thread_translate:
+	linux_thread_to_bible_thread
+	convert_linux_tid
+	translate_linux_thread_flags
+	map_linux_thread_info
+	remap_linux_stack
+	translate_linux_sp
+	convert_linux_ip
+	map_linux_user_regs
+	remap_linux_fpu_state;
+linux_thread_import:
+	import_linux_thread
+	validate_linux_thread
+	extract_linux_thread_regs
+	alloc_bible_thread_from_linux
+	inherit_thread_attrs;
+
+Line 281-350 Funcs:
+linux_cgroup_translate:
+	linux_cgroup_to_bible_work
+	convert_linux_cgroup_id
+	translate_linux_cgroup_name
+	map_linux_cgroup_subsys
+	remap_linux_cgroup_procs
+	translate_linux_cgroup_tasks
+	convert_linux_cgroup_controllers
+	map_linux_cgroup_populated;
+linux_cgroup_import:
+	import_linux_cgroup
+	validate_linux_cgroup
+	extract_linux_cgroup_data
+	alloc_bible_work_from_cgroup
+	create_bible_work_hierarchy;
+
+Line 351-420 Funcs:
+linux_css_set_translate:
+	linux_css_set_to_bible_work
+	convert_linux_css_id
+	translate_linux_css_refs
+	map_linux_cgroup_subsys_state
+	remap_linux_css_task_iters
+	translate_linux_css_links;
+linux_css_set_import:
+	import_linux_css_set
+	validate_linux_css_set
+	extract_linux_css_data
+	attach_to_bible_work
+	link_bible_work_to_css;
+
+Line 421-490 Funcs:
+linux_subsys_translate:
+	linux_cpu_cgroup_to_bible
+	linux_memory_cgroup_to_bible
+	linux_cpuacct_cgroup_to_bible
+	linux_cpuset_cgroup_to_bible
+	linux_device_cgroup_to_bible
+	linux_ freezer_cgroup_to_bible
+	linux_net_prio_cgroup_to_bible
+	linux_hugetlb_cgroup_to_bible
+	linux_pids_cgroup_to_bible;
+linux_subsys_import:
+	import_cpu_controller
+	import_memory_controller
+	import_cpuacct_controller
+	import_cpuset_controller
+	import_device_controller
+	import_freezer_controller;
+
+Line 491-560 Funcs:
+linux_sched_class_translate:
+	linux_cfs_class_to_bible
+	linux_rt_class_to_bible
+	linux_dl_class_to_bible
+	linux_stop_class_to_bible
+	linux_idle_class_to_bible
+	convert_linux_sched_policy
+	map_linux_sched_attr
+	remap_linux_sched_param
+	translate_linux_sched_flags;
+linux_sched_import:
+	import_cfs_sched_class
+	import_rt_sched_class
+	import_dl_sched_class
+	import_stop_sched_class
+	import_idle_sched_class;
+
+Line 561-630 Funcs:
+linux_rq_translate:
+	linux_rq_to_bible_rq
+	convert_linux_nr_running
+	translate_linux_curr
+	map_linux_cfs_rq
+	remap_linux_rt_rq
+	translate_linux_dl_rq
+	convert_linux_rq_load
+	map_linux_rq_clock
+	remap_linux_rq_offline;
+linux_rq_import:
+	import_linux_rq
+	validate_linux_rq
+	extract_linux_rq_data
+	alloc_bible_rq_from_linux
+	sync_bible_rq_state;
+
+Line 631-700 Funcs:
+linux_cfs_rq_translate:
+	linux_cfs_rq_to_bible_queue
+	convert_linux_cfs_nr_running
+	translate_linux_cfs_load
+	map_linux_cfs_rb_root
+	remap_linux_cfs_leftmost
+	translate_linux_cfs_min_vruntime
+	convert_linux_cfs_tasks
+	map_linux_cfs_curr;
+linux_cfs_import:
+	import_linux_cfs_rq
+	validate_linux_cfs_rq
+	extract_linux_cfs_data
+	replay_cfs_tree_in_bible
+	migrate_cfs_tasks;
+
+Line 701-770 Funcs:
+linux_mm_translate:
+	linux_mm_to_bible_vm
+	convert_linux_mm_users
+	translate_linux_mm_count
+	map_linux_mmap
+	remap_linux_vma
+	translate_linux_pgd
+	convert_linux_rss_stat
+	map_linux_mm_flags
+	remap_linux_mm_owner;
+linux_mm_import:
+	import_linux_mm
+	validate_linux_mm
+	extract_linux_mm_data
+	alloc_bible_vm_from_linux
+	clone_bible_mm;
+
+Line 771-840 Funcs:
+linux_namespace_translate:
+	linux_nsproxy_to_bible_ns
+	convert_linux_mnt_namespace
+	translate_linux_uts_namespace
+	map_linux_ipc_namespace
+	remap_linux_net_namespace
+	translate_linux_pid_namespace
+	convert_linux_user_namespace
+	map_linux_cgroup_namespace;
+linux_namespace_import:
+	import_linux_namespaces
+	validate_linux_nsproxy
+	extract_linux_ns_data
+	create_bible_namespaces
+	set_bible_ns_from_linux;
+
+Line 841-910 Funcs:
+linux_cred_translate:
+	linux_cred_to_bible_cred
+	convert_linux_uid
+	convert_linux_gid
+	translate_linux_euid
+	map_linux_egid
+	remap_linux_suid
+	translate_linux_sgid
+	convert_linux_fsuid
+	map_linux_fsgid;
+linux_cred_import:
+	import_linux_cred
+	validate_linux_cred
+	extract_linux_cred_data
+	alloc_bible_cred_from_linux
+	merge_bible_creds;
+
+Line 911-980 Funcs:
+linux_fs_translate:
+	linux_fs_struct_to_bible_fs
+	convert_linux_root
+	translate_linux_pwd
+	map_linux_fs_flags
+	remap_linux_fs_count
+	translate_linux_fs_umask;
+linux_fs_import:
+	import_linux_fs_struct
+	validate_linux_fs
+	extract_linux_fs_data
+	set_bible_fs_root
+	set_bible_fs_pwd;
+
+Line 981-1050 Funcs:
+linux_files_translate:
+	linux_files_struct_to_bible_files
+	convert_linux_fdt
+	translate_linux_open_fds
+	map_linux_fd_array
+	remap_linux_fd_flags
+	translate_linux_file_pos
+	convert_linux_file_ops
+	map_linux_file_private;
+linux_files_import:
+	import_linux_files_struct
+	validate_linux_files
+	extract_linux_fd_data
+	recreate_bible_fdtable
+	clone_bible_files;
+
+Line 1051-1120 Funcs:
+linux_signal_translate:
+	linux_signal_struct_to_bible_signal
+	convert_linux_sighand
+	translate_linux_sigaction
+	map_linux_sigpending
+	remap_linux_sigqueue
+	translate_linux_sigmask
+	convert_linux_sigset
+	map_linux_rt_sigframe;
+linux_signal_import:
+	import_linux_signal
+	validate_linux_signal
+	extract_linux_signal_data
+	setup_bible_signal_handlers
+	translate_bible_signal;
+
+Line 1121-1190 Funcs:
+linux_seccomp_translate:
+	linux_seccomp_to_bible_filter
+	convert_linux_seccomp_mode
+	translate_linux_seccomp_filter
+	map_linux_bpf_prog
+	remap_linux_seccomp_data
+	translate_linux_ptrace;
+linux_seccomp_import:
+	import_linux_seccomp
+	validate_linux_seccomp
+	extract_linux_seccomp_data
+	install_bible_seccomp
+	emulate_bpf_in_bible;
+
+Line 1191-1260 Funcs:
+linux_perf_event_translate:
+	linux_perf_event_to_bible_perf
+	convert_linux_perf_fd
+	translate_linux_perf_attr
+	map_linux_perf_buffer
+	remap_linux_perf_context
+	translate_linux_perf_cgroup;
+linux_perf_import:
+	import_linux_perf
+	validate_linux_perf
+	extract_linux_perf_data
+	create_bible_perf_events
+	attach_perf_to_bible_task;
+
+Line 1261-1330 Funcs:
+linux_tracepoint_translate:
+	linux_tracepoint_to_bible_trace
+	convert_linux_trace_event
+	translate_linux_trace_array
+	map_linux_trace_buffer
+	remap_linux_trace_printk
+	translate_linux_trace_seq;
+linux_trace_import:
+	import_linux_trace
+	validate_linux_trace
+	extract_linux_trace_data
+	setup_bible_tracing
+	hook_bible_events;
+
+Line 1331-1400 Funcs:
+linux_ftrace_translate:
+	linux_ftrace_to_bible_ftrace
+	convert_linux_ftrace_ops
+	translate_linux_function_hook
+	map_linux_graph_trace
+	remap_linux_ftrace_hash
+	translate_linux_dynamic_ftrace;
+linux_ftrace_import:
+	import_linux_ftrace
+	validate_linux_ftrace
+	extract_linux_ftrace_data
+	install_bible_ftrace
+	trace_bible_functions;
+
+Line 1401-1470 Funcs:
+linux_kprobe_translate:
+	linux_kprobe_to_bible_kprobe
+	convert_linux_kprobe_addr
+	translate_linux_kprobe_opcode
+	map_linux_jprobe
+	remap_linux_kretprobe
+	translate_linux_kprobe_handler;
+linux_kprobe_import:
+	import_linux_kprobe
+	validate_linux_kprobe
+	extract_linux_kprobe_data
+	install_bible_breakpoints
+	hook_bible_kernel;
+
+Line 1471-1540 Funcs:
+linux_eBPF_translate:
+	linux_bpf_to_bible_bpf
+	convert_linux_bpf_prog
+	translate_linux_bpf_map
+	map_linux_bpf_context
+	remap_linux_bpf_verifier
+	translate_linux_bpf_helpers;
+linux_bpf_import:
+	import_linux_bpf
+	validate_linux_bpf
+	extract_linux_bpf_data
+	run_bpf_in_bible_sandbox
+	emulate_bpf_syscalls;
+
+Line 1541-1610 Funcs:
+linux_cpu_hotplug_translate:
+	linux_cpu_hotplug_to_bible
+	convert_linux_cpu_up
+	translate_linux_cpu_down
+	map_linux_cpu_dead
+	remap_linux_cpu_online
+	translate_linux_hp_states;
+linux_cpu_hotplug_import:
+	import_linux_cpu_hotplug
+	validate_linux_hp_callbacks
+	extract_linux_cpu_data
+	manage_bible_cpu_state
+	hotplug_bible_cpu;
+
+Line 1611-1680 Funcs:
+linux_pid_translate:
+	linux_pid_to_bible_pid
+	convert_linux_pid_numbers
+	translate_linux_pid_link
+	map_linux_pid_chain
+	remap_linux_pid_hash
+	translate_linux_pid_namespace;
+linux_pid_import:
+	import_linux_pid
+	validate_linux_pid
+	extract_linux_pid_data
+	alloc_bible_pid_from_linux
+	map_bible_pid;
+
+Line 1681-1750 Funcs:
+linux_cgroup_iterate:
+	iterate_linux_cgroups
+	collect_linux_cgroup_list
+	traverse_cgroup_hierarchy
+	filter_linux_cgroups_by_type
+	snapshot_linux_cgroups;
+linux_task_iterate:
+	iterate_linux_tasks
+	collect_linux_task_list
+	traverse_task_tree
+	filter_linux_tasks_by_cgroup
+	snapshot_linux_tasks;
+
+Line 1751-1820 Funcs:
+linux_batch_translate:
+	batch_translate_tasks
+	batch_translate_threads
+	batch_translate_cgroups
+	batch_translate_css_sets
+	batch_translate_mm
+	batch_translate_namespaces;
+linux_batch_commit:
+	commit_task_translations
+	commit_thread_translations
+	commit_cgroup_translations
+	commit_css_translations
+	commit_mm_translations
+	atomic_linux_transaction;
+
+Line 1821-1890 Funcs:
+linux_state_sync:
+	sync_linux_task_state
+	sync_linux_thread_state
+	sync_linux_cgroup_state
+	sync_linux_sched_state
+	sync_linux_mm_state
+	sync_linux_fs_state;
+linux_state_import:
+	import_sync_task_state
+	import_sync_thread_state
+	import_sync_cgroup_state
+	import_sync_sched_state
+	import_sync_mm_state
+	import_sync_fs_state;
+
+Line 1891-1960 Funcs:
+linux_dependency_resolve:
+	resolve_task_dependencies
+	resolve_cgroup_dependencies
+	resolve_css_dependencies
+	resolve_ns_dependencies
+	resolve_mm_dependencies
+	build_dependency_graph;
+linux_dependency_import:
+	import_with_dependencies
+	validate_dependencies
+	resolve_cross_links
+	fixup_dangling_refs
+	complete_dependency_chain;
+
+Line 1961-2030 Funcs:
+linux_validate:
+	validate_linux_task_integrity
+	validate_linux_thread_integrity
+	validate_linux_cgroup_integrity
+	validate_linux_css_integrity
+	validate_linux_mm_integrity
+	validate_linux_ns_integrity
+	validate_linux_cred_integrity;
+linux_verify:
+	verify_task_translation
+	verify_thread_translation
+	verify_cgroup_translation
+	verify_css_translation
+	verify_mm_translation
+	verify_ns_translation
+	verify_cred_translation;
+
+Line 2031-2100 Funcs:
+linux_cache:
+	cache_linux_task
+	cache_linux_thread
+	cache_linux_cgroup
+	cache_linux_css_set
+	cache_linux_mm
+	cache_linux_namespace
+	cache_linux_cred;
+linux_invalidate:
+	invalidate_task_cache
+	invalidate_thread_cache
+	invalidate_cgroup_cache
+	invalidate_css_cache
+	invalidate_mm_cache
+	invalidate_ns_cache
+	invalidate_cred_cache;
+
+Line 2101-2170 Funcs:
+linux_lookup:
+	lookup_linux_task_by_pid
+	lookup_linux_thread_by_tid
+	lookup_linux_cgroup_by_id
+	lookup_linux_css_by_addr
+	lookup_linux_mm_by_owner
+	lookup_linux_ns_by_task;
+linux_resolve:
+	resolve_bible_to_linux_task
+	resolve_bible_to_linux_thread
+	resolve_bible_work_to_cgroup
+	resolve_bible_to_linux_mm
+	resolve_bible_to_linux_ns
+	resolve_bible_cred_to_linux;
+
+Line 2171-2240 Funcs:
+linux_translation_end:
+	cleanup_linux_translator
+	free_translation_tables
+	unregister_linux_hooks
+	flush_all_linux_translations
+	linux_translator_shutdown
+	shutdown_converter
+	finalize_all_conversions;
+
+end;
+
+proc/sched_timesharing.c:
+Line 1-80 Class:
+edge_sched_struct
+edge_rq_struct
+edge_entity_struct
+edge_dl_struct
+edge_rt_struct
+edge_cfs_struct
+edge_bw_struct
+edge_period_struct
+edge_budget_struct;
+
+Line 81-160 Funcs:
+edge_sched_init:
+	init_edge_scheduler
+	init_edge_runqueues
+	init_edge_entities
+	init_edge_dl_sched
+	init_edge_rt_sched
+	init_edge_cfs_sched
+	init_edge_bandwidth
+	init_edge_accounting;
+
+Line 161-240 Funcs:
+edge_enqueue:
+	enqueue_task_edge
+	enqueue_entity_edge
+	enqueue_dl_task
+	enqueue_rt_task
+	enqueue_cfs_task
+	update_edge_tree_on_enqueue
+	calc_key_on_enqueue
+	place_entity_edge;
+
+Line 241-320 Funcs:
+edge_dequeue:
+	dequeue_task_edge
+	dequeue_entity_edge
+	dequeue_dl_task
+	dequeue_rt_task
+	dequeue_cfs_task
+	update_edge_tree_on_dequeue
+	recalc_key_on_dequeue
+	remove_entity_edge;
+
+Line 321-400 Funcs:
+edge_pick_next:
+	pick_next_task_edge
+	pick_next_entity_edge
+	pick_next_dl_entity
+	pick_next_rt_entity
+	pick_next_cfs_entity
+	find_leftmost_edge
+	get_min_key_entity
+	select_optimal_edge;
+
+Line 401-480 Funcs:
+edge_tick:
+	tick_handler_edge
+	update_curr_edge
+	update_entity_on_tick
+	check_preempt_on_tick
+	update_stats_edge
+	account_tick_time
+	trigger_resched_edge
+	update_load_on_tick;
+
+Line 481-560 Funcs:
+edge_yield:
+	yield_task_edge
+	yield_entity_edge
+	reinsert_curr_edge
+	update_key_on_yield
+	update_deadline_on_yield
+	resched_curr_edge
+	account_yield_time
+	edge_yield_complete;
+
+Line 561-640 Funcs:
+edge_wakeup:
+	wakeup_preempt_edge
+	wakeup_entity_edge
+	place_entity_on_wakeup
+	update_load_on_wakeup
+	check_preempt_on_wakeup
+	update_key_on_wakeup
+	edge_wakeup_complete
+	notify_wakeup_edge;
+
+Line 641-720 Funcs:
+edge_sleep:
+	sleep_task_edge
+	sleep_entity_edge
+	deactivate_on_sleep
+	update_stats_on_sleep
+	account_sleep_time
+	edge_save_state
+	edge_sleep_complete
+	prepare_for_wake;
+
+Line 721-800 Funcs:
+edge_key_calc:
+	calc_edge_key
+	calc_dl_key
+	calc_rt_key
+	calc_cfs_key
+	update_entity_key
+	recalc_all_keys
+	normalize_key_value
+	scale_key_by_weight;
+
+Line 801-880 Funcs:
+edge_deadline:
+	calc_deadline_edge
+	update_deadline_entity
+	set_initial_deadline
+	adjust_deadline
+	deadline_reached
+	handle_deadline_miss
+	reclaim_deadline_bw
+	extend_deadline;
+
+Line 881-960 Funcs:
+edge_budget:
+	alloc_budget_edge
+	consume_budget
+	update_budget_usage
+	replenish_budget
+	check_budget_overflow
+	handle_budget_exhaust
+	steal_budget
+	donate_budget;
+
+Line 961-1040 Funcs:
+edge_bandwidth:
+	init_bandwidth_edge
+	update_bandwidth_usage
+	distribute_bandwidth
+	return_bandwidth
+	enforce_bandwidth_limit
+	calc_bandwidth_demand
+	throttle_on_overflow
+	unthrottle_edge;
+
+Line 1041-1120 Funcs:
+edge_period:
+	start_period_edge
+	end_period_edge
+	update_period_entity
+	calc_period_elapsed
+	handle_peric_complete
+	reset_period_stats
+	adjust_period_length
+	period_overrun_handler;
+
+Line 1121-1200 Funcs:
+edge_load_calc:
+	calc_edge_load
+	calc_edge_avg_load
+	update_edge_load
+	scale_load_edge
+	calc_per_entity_load
+	calc_rq_load_edge
+	calc_system_load
+	update_load_history;
+
+Line 1201-1280 Funcs:
+edge_balance:
+	balance_edge_rqs
+	find_busiest_edge_rq
+	find_idlest_edge_cpu
+	calculate_imbalance_edge
+	fixup_imbalance_edge
+	migrate_edge_tasks
+	pull_edge_tasks
+	push_edge_tasks;
+
+Line 1281-1360 Funcs:
+edge_migrate:
+	migrate_task_edge
+	can_migrate_edge
+	should_migrate_edge
+	find_migration_target
+	migrate_entity_edge
+	update_rqs_on_migration
+	load_balancing_migrate
+	affinity_migrate;
+
+Line 1361-1440 Funcs:
+edge_tree:
+	init_edge_tree
+	insert_edge_entity
+	remove_edge_entity
+	update_edge_tree
+	rebalance_edge_tree
+	find_leftmost_edge
+	find_rightmost_edge
+	traverse_edge_tree;
+
+Line 1441-1520 Funcs:
+edge_priority:
+	set_priority_edge
+	calc_dynamic_priority
+	update_priority_on_tick
+	boost_priority
+	decay_priority
+	edge_nice_to_prio
+	edge_prio_to_weight
+	handle_priority_inherit;
+
+Line 1521-1600 Funcs:
+edge_preempt:
+	check_preempt_edge
+	should_preempt_curr
+	preempt_tick_handler
+	preempt_wakeup_handler
+	preempt_yield_handler
+	force_preempt_edge
+	resched_curr_edge
+	preempt_complete;
+
+Line 1601-1680 Funcs:
+edge_accounting:
+	account_start_edge
+	account_stop_edge
+	account_exec_time
+	account_wait_time
+	account_sleep_time
+	account_iowait_time
+	account_steal_time
+	account_idle_time;
+
+Line 1681-1760 Funcs:
+edge_statistics:
+	collect_edge_stats
+	update_edge_stats
+	reset_edge_stats
+	print_edge_stats
+	calc_avg_latency
+	calc_throughput
+	calc_response_time
+	monitor_edge_perf;
+
+Line 1761-1840 Funcs:
+edge_throttle:
+	throttle_edge_rq
+	unthrottle_edge_rq
+	throttle_entity_edge
+	check_throttled_edge
+	throttle_periodic
+	release_throttled
+	throttle_balance
+	throttle_account;
+
+Line 1841-1920 Funcs:
+edge_dl_handler:
+	dl_task_handler
+	dl_timer_handler
+	dl_overflow_check
+	dl_throttle_handler
+	dl_replenish_handler
+	dl_deadline_handler
+	dl_migrate_handler
+	dl_params_update;
+
+Line 1921-2000 Funcs:
+edge_rt_handler:
+	rt_task_handler
+	rt_timer_handler
+	rt_prio_boost
+	rt_throttle_handler
+	rt_bandwidth_enforce
+	rt_migrate_handler
+	rt_params_update
+	rt_overrun_check;
+
+Line 2001-2080 Funcs:
+edge_cfs_handler:
+	cfs_task_handler
+	cfs_timer_handler
+	cfs_vruntime_update
+	cfs_load_update
+	cfs_place_entity
+	cfs_check_preempt
+	cfs_params_update
+	cfs_group_handler;
+
+Line 2081-2160 Funcs:
+edge_group:
+	init_edge_group
+	add_to_edge_group
+	remove_from_edge_group
+	update_group_shares
+	calc_group_load
+	distribute_group_bw
+	edge_group_throttle
+	edge_group_unthrottle;
+
+Line 2161-2240 Funcs:
+edge_hierarchy:
+	init_edge_hierarchy
+	build_edge_tree_hierarchy
+	traverse_edge_hierarchy
+	update_hierarchy_load
+	balance_hierarchy
+	migrate_in_hierarchy
+	propagate_edge_pressure
+	edge_hierarchy_stats;
+
+Line 2241-2320 Funcs:
+edge_energy:
+	energy_aware_edge
+	calc_energy_cost_edge
+	energy_edge_pick
+	energy_edge_balance
+	update_energy_stats
+	tune_for_energy
+	energy_perf_policy
+	edge_energy_save;
+
+Line 2321-2400 Funcs:
+edge_power:
+	power_aware_edge
+	calc_power_cost
+	power_capping_edge
+	throttle_for_power
+	edge_power_clamp
+	power_budget_alloc
+	dvfs_edge_handler
+	edge_c_states;
+
+Line 2401-2480 Funcs:
+edge_thermal:
+	thermal_aware_edge
+	edge_thermal_throttle
+	edge_thermal_unthrottle
+	update_thermal_pressure
+	thermal_edge_balance
+	cooling_edge_handler
+	edge_thermal_boost
+	thermal_emergency_stop;
+
+Line 2481-2560 Funcs:
+edge_idle:
+	idle_handler_edge
+	enter_idle_edge
+	exit_idle_edge
+	account_idle_edge
+	idle_balance_edge
+	idle_injection
+	halt_on_idle
+	wake_from_idle;
+
+Line 2561-2640 Funcs:
+edge_irq:
+	irq_handler_edge
+	irqtime_account_edge
+	irq_enter_edge
+	irq_exit_edge
+	softirq_edge_handler
+	irq_balance_edge
+	irq_throttle_edge
+	irq_affinity_edge;
+
+Line 2641-2720 Funcs:
+edge_debug:
+	debug_dump_edge
+	debug_validate_edge
+	debug_check_invariants
+	debug_trace_edge
+	debug_edge_queue
+	debug_edge_tree
+	debug_edge_stats
+	debug_edge_perf;
+
+Line 2721-2800 Funcs:
+edge_sysctl:
+	sysctl_edge_handler
+	edge_param_set
+	edge_param_get
+	edge_param_reset
+	edge_sysctl_register
+	edge_sysctl_unregister
+	edge_proc_show
+	edge_debugfs_show;
+
+Line 2801-2880 Funcs:
+edge_cgroup:
+	edge_cgroup_init
+	edge_cgroup_attach
+	edge_cgroup_can_attach
+	edge_cgroup_cancel_attach
+	edge_cgroup_post_attach
+	edge_cgroup_transfer
+	edge_cgroup_release
+	edge_cgroup_stats;
+
+Line 2881-2960 Funcs:
+edge_namespace:
+	edge_ns_init
+	edge_ns_copy
+	edge_ns_free
+	edge_ns_switch
+	edge_ns_enter
+	edge_ns_exit
+	edge_ns_propagate
+	edge_ns_isolation;
+
+Line 2961-3040 Funcs:
+edge_user:
+	edge_user_init
+	edge_user_enter
+	edge_user_exit
+	edge_user_account
+	edge_user_tick
+	edge_user_wakeup
+	edge_user_sleep
+	edge_user_preempt;
+
+Line 3041-3120 Funcs:
+edge_kernel:
+	edge_kernel_init
+	edge_kernel_enter
+	edge_kernel_exit
+	edge_kernel_account
+	edge_kernel_tick
+	edge_kernel_wakeup
+	edge_kernel_sleep
+	edge_kernel_preempt;
+
+Line 3121-3200 Funcs:
+edge_realtime:
+	edge_rt_boost
+	edge_rt_throttle
+	edge_rt_bandwidth
+	edge_rt_migrate
+	edge_rt_prio_inherit
+	edge_rt_lock_handler
+	edge_rt_wakeup
+	edge_rt_sleep;
+
+Line 3201-3280 Funcs:
+edge_deadline:
+	edge_dl_init
+	edge_dl_timer
+	edge_dl_throttle
+	edge_dl_unthrottle
+	edge_dl_replenish
+	edge_dl_overflow
+	edge_dl_migrate
+	edge_dl_params;
+
+Line 3281-3360 Funcs:
+edge_fair:
+	edge_fair_init
+	edge_fair_enqueue
+	edge_fair_dequeue
+	edge_fair_pick
+	edge_fair_tick
+	edge_fair_yield
+	edge_fair_wakeup
+	edge_fair_sleep;
+
+Line 3361-3440 Funcs:
+edge_edge:
+	edge_of_edge
+	edge_on_edge
+	edge_beyond_edge
+	edge_at_threshold
+	edge_near_limit
+	edge_optimize
+	edge_tune_params
+	edge_auto_config;
+
+Line 3441-3520 Funcs:
+edge_finalize:
+	edge_sched_stop
+	edge_sched_shutdown
+	edge_flush_all
+	edge_reset_all
+	edge_release_resources
+	edge_cleanup
+	edge_destroy
+	edge_exit;
+
+end;
+
