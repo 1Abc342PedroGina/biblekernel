@@ -85,7 +85,12 @@ production hybrid kernels, your expertise would be invaluable.
 | `incl/bible/task.h` | Task interfaces (register-based) |
 | `kinterrupt/traps.h` | Interrupt Traps Interface |
 | `kinterrupt/traps.c` | Trap handling implementation |
-
+| `kexceptions/traps.h` | Exceptions Traps Interface |
+| `kexceptions/traps.c` | Trap handling implementation |
+| `bshc/ldt.h` | Exceptions Traps Interface |
+| `bshc/idt.h` | Trap handling implementation |
+| `bshc/gdt.h` | Exceptions Traps Interface |
+| `bshc/hardware_page.h` | Trap handling implementation |
 ===============================================================================
                          THE "EVERYTHING IS A REGISTER" ARCHITECTURE
 ===============================================================================
