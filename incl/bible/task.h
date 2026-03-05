@@ -4,7 +4,7 @@
 #include <bible/cdefs.h>
 #include <bible/types.h>
 #include <bible/queue.h>
-#include <bible/pthreadtypes.h>
+#include <bible/pthread.h>
 #include <bible/vm.h>
 #include <bible/pmap.h>
 
@@ -612,3 +612,4 @@ void bk_task_dump_system_stats(void);
 
 
 #endif /* !_BIBLE_TASK_H_ */
+
