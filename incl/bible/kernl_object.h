@@ -6,7 +6,8 @@
 #include <bible/queue.h>
 
 /*
- * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-License-Identifier: MIT License
+ * see src/LICENSE
  *
  * Copyright (c) 2024 Bible System Developers
  * Todos os direitos reservados.
@@ -584,5 +585,6 @@ BK_I32 bk_object_unregister_callback(BK_OBJ_TYPE type, BK_UINT32 event_mask,
 #define BK_OBJECT_ENOTSUP		10	/* Não suportado */
 #define BK_OBJECT_EINVALIDTYPE		11	/* Tipo inválido */
 #define BK_OBJECT_ECORRUPT		12	/* Objeto corrompido */
+
 
 #endif /* !_BIBLE_KERNL_OBJECT_H_ */
