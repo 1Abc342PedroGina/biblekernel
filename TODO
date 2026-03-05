@@ -1,0 +1,48 @@
+proc/context_switch.c:
+Line 120 Class:
+ctx_in_c struct
+
+Line 160 Funcs:
+save_ctx:
+ctx_counter_software
+cpu_register_ctx
+ctx_mm_info
+ctx_stack_state;
+
+Line 230 Funcs:
+ctx_pcb:
+pcb_dat
+pcb_stat:
+pcb_exec
+pcb_ready
+pcb_waiting
+pcb_scheduled;
+pcb_sched;
+
+Line 360-700 Funcs:
+ctx_sched
+ctx_wait
+ctx_soft
+ctx_register
+ctx_mmu
+ctx_pmap
+ctx_vm_map
+ctx_mm
+ctx_eevdf;
+
+Line 760-901 Funcs:
+ctx_translate
+ctx_cfs
+ctx_edge
+ctx_amp;
+
+Line 970-1200:
+ctx_user
+ctx_kern
+ctx_bk;
+
+Line 1250-1400:
+ctx_init
+ctx_end;
+
+end;
