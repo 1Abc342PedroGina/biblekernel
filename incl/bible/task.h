@@ -9,7 +9,7 @@
 #include <bible/pmap.h>
 
 /*
- * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-License-Identifier: MIT License
  *
  * Copyright (c) 2024 Bible System Developers
  * Todos os direitos reservados.
@@ -609,5 +609,6 @@ void bk_task_dump_thread(BK_THREAD *thread);
 void bk_task_dump_activity(BK_ACTIVITY *activity);
 void bk_task_dump_system_stats(void);
 #endif
+
 
 #endif /* !_BIBLE_TASK_H_ */
