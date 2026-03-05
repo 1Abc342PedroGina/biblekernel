@@ -35,7 +35,7 @@ production hybrid kernels, your expertise would be invaluable.
   - `incl/bible/queue.h` - Queue/list management
   - `COPYING_ADVISE` - License advises (see below)
   - `PROPIETAREY` - Proprietary terms
-  - `LICENSE_MIT` - MIT license for open versions
+  - `LICENSE` - MIT license for open versions
 
 🔄 **NEED HELP WITH (organized by subsystem):**
 
@@ -142,7 +142,7 @@ license, even during proprietary version cycles.
 
 LICENSE MODEL:
 
-Pre-1.3 versions: Open source under MIT license (LICENSE_MIT)
+Pre-1.3 versions: Open source under MIT license (LICENSE)
 
 Version 1.3: Proprietary (see PROPIETAREY)
 
