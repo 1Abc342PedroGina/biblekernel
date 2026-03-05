@@ -5,7 +5,7 @@
 #include <bible/types.h>
 
 /*
- * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-License-Identifier: MIT License
  *
  * Copyright (c) 2024 Bible System Developers
  * Todos os direitos reservados.
@@ -258,5 +258,6 @@ BK_FD_COUNT(const BK_FD_SET *set)
 #define	poll			bk_poll
 
 #endif /* !_BK_NO_COMPAT */
+
 
 #endif /* !_BIBLE_SELECT_H_ */
