@@ -51,7 +51,6 @@ ctx_end;
 end;
 
 proc/sched_prim.c:
-proc/sched_prim.c:
 Line 1-150 Class:
 sched_eevdf_struct
 
@@ -2152,3 +2151,1657 @@ edge_finalize:
 
 end;
 
+proc/task.c:
+Line 1-100 Class:
+task_struct
+task_group_struct
+task_region_struct
+task_mm_struct
+task_signal_struct
+task_stats_struct
+task_debug_struct
+task_attr_struct
+task_quota_struct
+task_security_struct
+task_audit_struct
+task_trace_struct;
+
+Line 101-200 Funcs:
+task_init:
+	init_task_manager
+	init_task_subsystem
+	init_task_kmem_cache
+	init_task_hash_table
+	init_task_id_allocator
+	init_task_rcu
+	init_task_refcount
+	init_task_namespace
+	init_task_cgroup
+	init_task_accounting
+	init_task_security
+	init_task_audit;
+
+Line 201-300 Funcs:
+task_create:
+	alloc_task_struct
+	alloc_task_id
+	init_task_struct
+	setup_task_region
+	setup_task_stack
+	setup_task_threads
+	init_task_signal
+	init_task_mm
+	init_task_files
+	init_task_creds
+	init_task_security
+	init_task_stats;
+
+Line 301-400 Funcs:
+task_alloc:
+	kmem_cache_alloc_task
+	kzalloc_task_struct
+	alloc_pages_task
+	alloc_task_region_pages
+	alloc_task_stack_pages
+	alloc_task_thread_pages
+	alloc_task_signal_struct
+	alloc_task_mm_struct
+	alloc_task_files_struct
+	alloc_task_fs_struct
+	alloc_task_nsproxy
+	alloc_task_cred;
+
+Line 401-500 Funcs:
+task_free:
+	free_task_struct
+	free_task_id
+	release_task_region
+	release_task_stack
+	release_task_threads
+	free_task_signal
+	free_task_mm
+	free_task_files
+	free_task_fs
+	free_task_creds
+	free_task_nsproxy
+	free_task_security;
+
+Line 501-600 Funcs:
+task_destroy:
+	destroy_task
+	destroy_task_threads
+	destroy_task_children
+	destroy_task_region
+	__put_task_struct
+	put_task_struct
+	task_refcount_dec
+	task_refcount_inc
+	task_refcount_read
+	wait_task_refcount_zero
+	release_task_resources
+	final_task_cleanup;
+
+Line 601-700 Funcs:
+task_region_init:
+	init_task_region
+	alloc_task_region
+	resize_task_region
+	expand_task_region
+	shrink_task_region
+	merge_task_regions
+	split_task_region
+	map_task_region
+	unmap_task_region
+	protect_task_region
+	lock_task_region
+	unlock_task_region;
+
+Line 701-800 Funcs:
+task_region_manage:
+	task_region_add_thread
+	task_region_remove_thread
+	task_region_find_thread
+	task_region_thread_count
+	task_region_thread_list
+	task_region_thread_iterate
+	task_region_lock_all
+	task_region_unlock_all
+	task_region_read_lock
+	task_region_write_lock
+	task_region_dirty_pages
+	task_region_clean_pages;
+
+Line 801-900 Funcs:
+task_region_memory:
+	task_region_alloc_pages
+	task_region_free_pages
+	task_region_map_pages
+	task_region_unmap_pages
+	task_region_page_fault
+	task_region_swap_pages
+	task_region_swap_in
+	task_region_swap_out
+	task_region_madvise
+	task_region_mlock
+	task_region_munlock
+	task_region_msync;
+
+Line 901-1000 Funcs:
+task_thread_add:
+	add_thread_to_task
+	add_thread_to_region
+	add_thread_to_group
+	task_attach_thread
+	task_clone_thread
+	task_fork_thread
+	task_vfork_thread
+	task_kernel_thread
+	task_user_thread
+	task_idle_thread
+	task_worker_thread;
+
+Line 1001-1100 Funcs:
+task_thread_remove:
+	remove_thread_from_task
+	remove_thread_from_region
+	detach_thread_from_task
+	task_kill_thread
+	task_exit_thread
+	task_wait_thread
+	task_stop_thread
+	task_continue_thread
+	task_freeze_thread
+	task_thaw_thread
+	task_park_thread;
+
+Line 1101-1200 Funcs:
+task_thread_find:
+	find_thread_by_tid
+	find_thread_by_pid
+	find_thread_by_name
+	find_thread_by_state
+	find_thread_by_prio
+	find_thread_in_task
+	find_main_thread
+	find_first_thread
+	find_last_thread
+	find_next_thread
+	find_prev_thread;
+
+Line 1201-1300 Funcs:
+task_thread_iterate:
+	task_for_each_thread
+	task_for_each_main_thread
+	task_for_each_child_thread
+	task_for_each_worker
+	iterate_task_threads
+	iterate_thread_list
+	walk_task_threads
+	traverse_task_threads
+	scan_task_threads
+	visit_task_threads
+	enumerate_task_threads;
+
+Line 1301-1400 Funcs:
+task_group_init:
+	init_task_group
+	create_task_group
+	destroy_task_group
+	add_task_to_group
+	remove_task_from_group
+	find_task_in_group
+	get_task_group
+	set_task_group
+	move_task_between_groups
+	task_group_leader
+	task_group_members;
+
+Line 1401-1500 Funcs:
+task_group_manage:
+	task_group_add_task
+	task_group_remove_task
+	task_group_add_thread
+	task_group_remove_thread
+	task_group_find_task
+	task_group_find_thread
+	task_group_count
+	task_group_empty
+	task_group_merge
+	task_group_split
+	task_group_balance;
+
+Line 1501-1600 Funcs:
+task_hierarchy:
+	task_parent_set
+	task_child_add
+	task_child_remove
+	task_sibling_add
+	task_sibling_remove
+	task_ancestor_find
+	task_descendant_find
+	task_hierarchy_depth
+	task_hierarchy_level
+	task_hierarchy_root
+	task_hierarchy_leaves;
+
+Line 1601-1700 Funcs:
+task_tree:
+	task_tree_init
+	task_tree_insert
+	task_tree_remove
+	task_tree_find
+	task_tree_update
+	task_tree_rotate
+	task_tree_balance
+	task_tree_walk
+	task_tree_traverse
+	task_tree_height
+	task_tree_depth;
+
+Line 1701-1800 Funcs:
+task_hash:
+	task_hash_init
+	task_hash_table_create
+	task_hash_table_destroy
+	task_hash_insert
+	task_hash_remove
+	task_hash_lookup
+	task_hash_find_by_pid
+	task_hash_find_by_name
+	task_hash_find_by_uid
+	task_hash_find_by_gid
+	task_hash_for_each;
+
+Line 1801-1900 Funcs:
+task_lookup:
+	lookup_task_by_pid
+	lookup_task_by_tgid
+	lookup_task_by_name
+	lookup_task_by_uid
+	lookup_task_by_gid
+	lookup_task_by_session
+	lookup_task_by_leader
+	lookup_task_by_parent
+	lookup_task_by_group
+	lookup_task_by_state;
+
+Line 1901-2000 Funcs:
+task_id_manage:
+	task_alloc_pid
+	task_alloc_tgid
+	task_free_pid
+	task_free_tgid
+	task_find_available_pid
+	task_reserve_pid
+	task_release_pid
+	task_pid_valid
+	task_pid_in_use
+	task_pid_to_vpid
+	task_vpid_to_pid;
+
+Line 2001-2100 Funcs:
+task_namespace:
+	task_ns_init
+	task_ns_copy
+	task_ns_free
+	task_ns_switch
+	task_ns_enter
+	task_ns_exit
+	task_ns_propagate
+	task_ns_get
+	task_ns_put
+	task_ns_install
+	task_ns_unshare;
+
+Line 2101-2200 Funcs:
+task_cgroup:
+	task_cgroup_init
+	task_cgroup_attach
+	task_cgroup_detach
+	task_cgroup_move
+	task_cgroup_can_attach
+	task_cgroup_cancel_attach
+	task_cgroup_post_attach
+	task_cgroup_release
+	task_cgroup_transfer
+	task_cgroup_get_path
+	task_cgroup_show;
+
+Line 2201-2300 Funcs:
+task_cred:
+	task_cred_init
+	task_cred_alloc
+	task_cred_free
+	task_cred_prepare
+	task_cred_transfer
+	task_cred_commit
+	task_cred_override
+	task_cred_revert
+	task_cred_get_uid
+	task_cred_get_gid
+	task_cred_get_euid
+	task_cred_get_egid;
+
+Line 2301-2400 Funcs:
+task_security:
+	task_security_init
+	task_security_alloc
+	task_security_free
+	task_security_clone
+	task_security_transfer
+	task_security_set
+	task_security_get
+	task_security_check
+	task_security_audit
+	task_security_compute
+	task_security_enforce;
+
+Line 2401-2500 Funcs:
+task_audit:
+	task_audit_init
+	task_audit_alloc
+	task_audit_free
+	task_audit_fork
+	task_audit_exec
+	task_audit_exit
+	task_audit_login
+	task_audit_logout
+	task_audit_session
+	task_audit_signal
+	task_audit_ipc;
+
+Line 2501-2600 Funcs:
+task_mm_init:
+	init_task_mm
+	alloc_task_mm
+	free_task_mm
+	dup_task_mm
+	copy_task_mm
+	exec_task_mm
+	exit_task_mm
+	mm_init_task
+	mm_attach_task
+	mm_detach_task
+	mm_switch_task;
+
+Line 2601-2700 Funcs:
+task_mm_manage:
+	task_mm_alloc_pages
+	task_mm_free_pages
+	task_mm_map
+	task_mm_unmap
+	task_mm_protect
+	task_mm_fault
+	task_mm_brk
+	task_mm_mmap
+	task_mm_munmap
+	task_mm_mprotect
+	task_mm_msync;
+
+Line 2701-2800 Funcs:
+task_mm_region:
+	task_mm_add_region
+	task_mm_remove_region
+	task_mm_find_region
+	task_mm_merge_region
+	task_mm_split_region
+	task_mm_expand_region
+	task_mm_shrink_region
+	task_mm_move_region
+	task_mm_copy_region
+	task_mm_share_region;
+
+Line 2801-2900 Funcs:
+task_vma:
+	task_vma_init
+	task_vma_alloc
+	task_vma_free
+	task_vma_add
+	task_vma_remove
+	task_vma_find
+	task_vma_merge
+	task_vma_split
+	task_vma_link
+	task_vma_unlink
+	task_vma_walk;
+
+Line 2901-3000 Funcs:
+task_signal_init:
+	init_task_signal
+	alloc_task_signal
+	free_task_signal
+	copy_task_signal
+	exec_task_signal
+	exit_task_signal
+	signal_init_task
+	signal_attach_task
+	signal_detach_task
+	signal_reset_task;
+
+Line 3001-3100 Funcs:
+task_signal_handle:
+	task_send_signal
+	task_force_signal
+	task_queue_signal
+	task_dequeue_signal
+	task_pending_signal
+	task_block_signal
+	task_unblock_signal
+	task_ignore_signal
+	task_catch_signal
+	task_default_signal;
+
+Line 3101-3200 Funcs:
+task_signal_action:
+	task_signal_action_get
+	task_signal_action_set
+	task_signal_action_reset
+	task_signal_action_default
+	task_signal_action_ignore
+	task_signal_action_catch
+	task_signal_action_term
+	task_signal_action_core
+	task_signal_action_stop
+	task_signal_action_cont;
+
+Line 3201-3300 Funcs:
+task_signal_mask:
+	task_sigmask_set
+	task_sigmask_clear
+	task_sigmask_and
+	task_sigmask_or
+	task_sigmask_xor
+	task_sigmask_complement
+	task_sigmask_empty
+	task_sigmask_fill
+	task_sigmask_equal
+	task_sigmask_subset;
+
+Line 3301-3400 Funcs:
+task_files_init:
+	init_task_files
+	alloc_task_files
+	free_task_files
+	copy_task_files
+	exec_task_files
+	exit_task_files
+	files_init_task
+	files_attach_task
+	files_detach_task
+	files_close_task;
+
+Line 3401-3500 Funcs:
+task_files_manage:
+	task_files_open
+	task_files_close
+	task_files_read
+	task_files_write
+	task_files_lseek
+	task_files_dup
+	task_files_dup2
+	task_files_dup3
+	task_files_fcntl
+	task_files_ioctl
+	task_files_poll;
+
+Line 3501-3600 Funcs:
+task_fd_table:
+	task_fd_alloc
+	task_fd_free
+	task_fd_get
+	task_fd_put
+	task_fd_install
+	task_fd_uninstall
+	task_fd_find
+	task_fd_lookup
+	task_fd_expand
+	task_fd_shrink
+	task_fd_clone;
+
+Line 3601-3700 Funcs:
+task_fs_init:
+	init_task_fs
+	alloc_task_fs
+	free_task_fs
+	copy_task_fs
+	exec_task_fs
+	exit_task_fs
+	fs_init_task
+	fs_attach_task
+	fs_detach_task
+	fs_chroot_task;
+
+Line 3701-3800 Funcs:
+task_fs_manage:
+	task_fs_chdir
+	task_fs_fchdir
+	task_fs_getcwd
+	task_fs_root
+	task_fs_umask
+	task_fs_umask_set
+	task_fs_umask_get
+	task_fs_open
+	task_fs_unlink
+	task_fs_rename
+	task_fs_link;
+
+Line 3801-3900 Funcs:
+task_namespace_init:
+	init_task_nsproxy
+	alloc_task_nsproxy
+	free_task_nsproxy
+	copy_task_nsproxy
+	exec_task_nsproxy
+	exit_task_nsproxy
+	nsproxy_init_task
+	switch_task_namespace
+	unshare_task_namespace
+	clone_task_namespace;
+
+Line 3901-4000 Funcs:
+task_namespace_ops:
+	task_ns_mount
+	task_ns_umount
+	task_ns_pivot_root
+	task_ns_chroot
+	task_ns_setns
+	task_ns_unshare
+	task_ns_get_ns
+	task_ns_put_ns
+	task_ns_install
+	task_ns_validate;
+
+Line 4001-4100 Funcs:
+task_sched_init:
+	init_task_sched
+	task_sched_alloc
+	task_sched_free
+	task_sched_fork
+	task_sched_exec
+	task_sched_exit
+	task_sched_wakeup
+	task_sched_sleep
+	task_sched_yield
+	task_sched_migrate;
+
+Line 4101-4200 Funcs:
+task_sched_attr:
+	task_sched_attr_init
+	task_sched_attr_set
+	task_sched_attr_get
+	task_sched_attr_copy
+	task_sched_attr_compare
+	task_sched_attr_apply
+	task_sched_attr_reset
+	task_sched_attr_default
+	task_sched_attr_valid
+	task_sched_attr_sanitize;
+
+Line 4201-4300 Funcs:
+task_sched_policy:
+	task_sched_policy_get
+	task_sched_policy_set
+	task_sched_policy_normal
+	task_sched_policy_fifo
+	task_sched_policy_rr
+	task_sched_policy_batch
+	task_sched_policy_idle
+	task_sched_policy_deadline
+	task_sched_policy_validate;
+
+Line 4301-4400 Funcs:
+task_sched_priority:
+	task_sched_priority_get
+	task_sched_priority_set
+	task_sched_priority_min
+	task_sched_priority_max
+	task_sched_priority_normal
+	task_sched_priority_static
+	task_sched_priority_dynamic
+	task_sched_priority_realtime
+	task_sched_priority_effective;
+
+Line 4401-4500 Funcs:
+task_sched_affinity:
+	task_sched_affinity_get
+	task_sched_affinity_set
+	task_sched_affinity_clear
+	task_sched_affinity_and
+	task_sched_affinity_or
+	task_sched_affinity_xor
+	task_sched_affinity_complement
+	task_sched_affinity_empty
+	task_sched_affinity_full
+	task_sched_affinity_validate;
+
+Line 4501-4600 Funcs:
+task_sched_quota:
+	task_sched_quota_init
+	task_sched_quota_set
+	task_sched_quota_get
+	task_sched_quota_consume
+	task_sched_quota_replenish
+	task_sched_quota_reset
+	task_sched_quota_throttle
+	task_sched_quota_unthrottle
+	task_sched_quota_balance;
+
+Line 4601-4700 Funcs:
+task_stats_init:
+	init_task_stats
+	alloc_task_stats
+	free_task_stats
+	reset_task_stats
+	update_task_stats
+	snapshot_task_stats
+	accumulate_task_stats
+	diff_task_stats
+	merge_task_stats
+	clear_task_stats;
+
+Line 4701-4800 Funcs:
+task_stats_cpu:
+	task_stats_cpu_time
+	task_stats_user_time
+	task_stats_system_time
+	task_stats_wait_time
+	task_stats_steal_time
+	task_stats_guest_time
+	task_stats_idle_time
+	task_stats_iowait_time
+	task_stats_irq_time
+	task_stats_softirq_time;
+
+Line 4801-4900 Funcs:
+task_stats_memory:
+	task_stats_vm_usage
+	task_stats_rss
+	task_stats_shared
+	task_stats_private
+	task_stats_swap
+	task_stats_pgfault
+	task_stats_pgmajfault
+	task_stats_stack_usage
+	task_stats_heap_usage
+	task_stats_cache_usage;
+
+Line 4901-5000 Funcs:
+task_stats_io:
+	task_stats_read_bytes
+	task_stats_write_bytes
+	task_stats_cancelled_bytes
+	task_stats_read_ops
+	task_stats_write_ops
+	task_stats_io_wait
+	task_stats_io_priority
+	task_stats_io_depth
+	task_stats_io_latency
+	task_stats_io_throughput;
+
+Line 5001-5100 Funcs:
+task_debug_init:
+	init_task_debug
+	alloc_task_debug
+	free_task_debug
+	task_debug_log
+	task_debug_trace
+	task_debug_dump
+	task_debug_validate
+	task_debug_check
+	task_debug_assert
+	task_debug_breakpoint;
+
+Line 5101-5200 Funcs:
+task_debug_info:
+	task_debug_info_pid
+	task_debug_info_state
+	task_debug_info_threads
+	task_debug_info_mm
+	task_debug_info_files
+	task_debug_info_signal
+	task_debug_info_creds
+	task_debug_info_sched
+	task_debug_info_stats
+	task_debug_info_all;
+
+Line 5201-5300 Funcs:
+task_quota_init:
+	init_task_quota
+	set_task_quota
+	get_task_quota
+	check_task_quota
+	enforce_task_quota
+	adjust_task_quota
+	reset_task_quota
+	task_quota_soft_limit
+	task_quota_hard_limit
+	task_quota_grace_period;
+
+Line 5301-5400 Funcs:
+task_quota_cpu:
+	task_quota_cpu_set
+	task_quota_cpu_get
+	task_quota_cpu_check
+	task_quota_cpu_consume
+	task_quota_cpu_remaining
+	task_quota_cpu_exceeded
+	task_quota_cpu_throttle
+	task_quota_cpu_unthrottle
+	task_quota_cpu_restart;
+
+Line 5401-5500 Funcs:
+task_quota_memory:
+	task_quota_memory_set
+	task_quota_memory_get
+	task_quota_memory_check
+	task_quota_memory_consume
+	task_quota_memory_remaining
+	task_quota_memory_exceeded
+	task_quota_memory_limit
+	task_quota_memory_oom
+	task_quota_memory_kill;
+
+Line 5501-5600 Funcs:
+task_fork:
+	task_fork_init
+	task_fork_alloc
+	task_fork_copy
+	task_fork_share
+	task_fork_clone
+	task_fork_vfork
+	task_fork_kernel
+	task_fork_user
+	task_fork_complete
+	task_fork_failure;
+
+Line 5601-5700 Funcs:
+task_fork_copy_ops:
+	task_fork_copy_mm
+	task_fork_copy_fs
+	task_fork_copy_files
+	task_fork_copy_signal
+	task_fork_copy_sighand
+	task_fork_copy_namespace
+	task_fork_copy_creds
+	task_fork_copy_security
+	task_fork_copy_audit
+	task_fork_copy_debug;
+
+Line 5701-5800 Funcs:
+task_fork_share_ops:
+	task_fork_share_mm
+	task_fork_share_fs
+	task_fork_share_files
+	task_fork_share_signal
+	task_fork_share_sighand
+	task_fork_share_namespace
+	task_fork_share_creds
+	task_fork_share_security
+	task_fork_share_audit
+	task_fork_share_debug;
+
+Line 5801-5900 Funcs:
+task_exec:
+	task_exec_begin
+	task_exec_alloc
+	task_exec_load
+	task_exec_mm
+	task_exec_fs
+	task_exec_files
+	task_exec_signal
+	task_exec_creds
+	task_exec_security
+	task_exec_audit
+	task_exec_complete
+	task_exec_failure;
+
+Line 5901-6000 Funcs:
+task_exit:
+	task_exit_begin
+	task_exit_notify
+	task_exit_mm
+	task_exit_fs
+	task_exit_files
+	task_exit_signal
+	task_exit_sighand
+	task_exit_namespace
+	task_exit_creds
+	task_exit_security
+	task_exit_audit
+	task_exit_debug;
+
+Line 6001-6100 Funcs:
+task_wait:
+	task_wait_init
+	task_wait_pid
+	task_wait_tgid
+	task_wait_all
+	task_wait_any
+	task_wait_stopped
+	task_wait_continued
+	task_wait_exited
+	task_wait_zombie
+	task_wait_trace
+	task_wait_complete;
+
+Line 6101-6200 Funcs:
+task_state:
+	task_state_get
+	task_state_set
+	task_state_running
+	task_state_stopped
+	task_state_sleeping
+	task_state_zombie
+	task_state_dead
+	task_state_idle
+	task_state_frozen
+	task_state_blocked
+	task_state_swapped;
+
+Line 6201-6300 Funcs:
+task_state_transition:
+	task_state_to_running
+	task_state_to_stopped
+	task_state_to_sleeping
+	task_state_to_zombie
+	task_state_to_dead
+	task_state_to_idle
+	task_state_to_frozen
+	task_state_to_blocked
+	task_state_validate
+	task_state_check;
+
+Line 6301-6400 Funcs:
+task_priority:
+	task_priority_init
+	task_priority_static
+	task_priority_dynamic
+	task_priority_normal
+	task_priority_realtime
+	task_priority_nice
+	task_priority_nice_set
+	task_priority_nice_get
+	task_priority_effective
+	task_priority_base;
+
+Line 6401-6500 Funcs:
+task_context:
+	task_context_save
+	task_context_restore
+	task_context_switch
+	task_context_dup
+	task_context_copy
+	task_context_validate
+	task_context_debug
+	task_context_user
+	task_context_kernel
+	task_context_interrupt;
+
+Line 6501-6600 Funcs:
+task_proc:
+	task_proc_init
+	task_proc_show
+	task_proc_read
+	task_proc_write
+	task_proc_open
+	task_proc_release
+	task_proc_lseek
+	task_proc_poll
+	task_proc_mmap
+	task_proc_fsync;
+
+Line 6601-6700 Funcs:
+task_sysctl:
+	task_sysctl_init
+	task_sysctl_register
+	task_sysctl_unregister
+	task_sysctl_read
+	task_sysctl_write
+	task_sysctl_handler
+	task_sysctl_get
+	task_sysctl_set
+	task_sysctl_reset
+	task_sysctl_default;
+
+Line 6701-6800 Funcs:
+task_debugfs:
+	task_debugfs_init
+	task_debugfs_create
+	task_debugfs_remove
+	task_debugfs_read
+	task_debugfs_write
+	task_debugfs_open
+	task_debugfs_release
+	task_debugfs_mmap
+	task_debugfs_show
+	task_debugfs_hide;
+
+Line 6801-6900 Funcs:
+task_tracepoint:
+	task_trace_init
+	task_trace_register
+	task_trace_unregister
+	task_trace_probe
+	task_trace_event
+	task_trace_filter
+	task_trace_enable
+	task_trace_disable
+	task_trace_trigger
+	task_trace_output;
+
+Line 6901-7000 Funcs:
+task_perf_event:
+	task_perf_init
+	task_perf_alloc
+	task_perf_free
+	task_perf_add
+	task_perf_remove
+	task_perf_enable
+	task_perf_disable
+	task_perf_read
+	task_perf_write
+	task_perf_mmap;
+
+Line 7001-7100 Funcs:
+task_seccomp:
+	task_seccomp_init
+	task_seccomp_alloc
+	task_seccomp_free
+	task_seccomp_filter
+	task_seccomp_mode
+	task_seccomp_actions
+	task_seccomp_audit
+	task_seccomp_trace
+	task_seccomp_log
+	task_seccomp_kill;
+
+Line 7101-7200 Funcs:
+task_ptrace:
+	task_ptrace_init
+	task_ptrace_attach
+	task_ptrace_detach
+	task_ptrace_peek
+	task_ptrace_poke
+	task_ptrace_getregs
+	task_ptrace_setregs
+	task_ptrace_getfpregs
+	task_ptrace_setfpregs
+	task_ptrace_syscall;
+
+Line 7201-7300 Funcs:
+task_coredump:
+	task_coredump_init
+	task_coredump_prepare
+	task_coredump_write
+	task_coredump_read
+	task_coredump_finish
+	task_coredump_abort
+	task_coredump_notes
+	task_coredump_prstatus
+	task_coredump_fpregset
+	task_coredump_siginfo;
+
+Line 7301-7400 Funcs:
+task_cgroup_export:
+	task_cgroup_export_procs
+	task_cgroup_export_tasks
+	task_cgroup_export_threads
+	task_cgroup_export_stats
+	task_cgroup_export_limits
+	task_cgroup_export_controllers
+	task_cgroup_export_hierarchy
+	task_cgroup_export_subsys
+	task_cgroup_export_data;
+
+Line 7401-7500 Funcs:
+task_namespace_export:
+	task_ns_export_mnt
+	task_ns_export_pid
+	task_ns_export_uts
+	task_ns_export_ipc
+	task_ns_export_net
+	task_ns_export_user
+	task_ns_export_cgroup
+	task_ns_export_time
+	task_ns_export_sysv;
+
+Line 7501-7600 Funcs:
+task_validate_all:
+	validate_task_struct
+	validate_task_region
+	validate_task_threads
+	validate_task_mm
+	validate_task_fs
+	validate_task_files
+	validate_task_signal
+	validate_task_creds
+	validate_task_namespace
+	validate_task_security;
+
+Line 7601-7700 Funcs:
+task_snapshot:
+	task_snapshot_create
+	task_snapshot_free
+	task_snapshot_capture
+	task_snapshot_restore
+	task_snapshot_compare
+	task_snapshot_diff
+	task_snapshot_merge
+	task_snapshot_apply
+	task_snapshot_rollback
+	task_snapshot_commit;
+
+Line 7701-7800 Funcs:
+task_migrate:
+	task_migrate_prepare
+	task_migrate_threads
+	task_migrate_memory
+	task_migrate_files
+	task_migrate_signals
+	task_migrate_creds
+	task_migrate_namespace
+	task_migrate_cgroup
+	task_migrate_complete
+	task_migrate_abort;
+
+Line 7801-7900 Funcs:
+task_checkpoint:
+	task_checkpoint_create
+	task_checkpoint_free
+	task_checkpoint_save
+	task_checkpoint_restore
+	task_checkpoint_freeze
+	task_checkpoint_thaw
+	task_checkpoint_suspend
+	task_checkpoint_resume
+	task_checkpoint_validate
+	task_checkpoint_rollback;
+
+Line 7901-8000 Funcs:
+task_cleanup:
+	task_cleanup_zombies
+	task_cleanup_dead
+	task_cleanup_exited
+	task_cleanup_stopped
+	task_cleanup_orphans
+	task_cleanup_leaders
+	task_cleanup_groups
+	task_cleanup_all
+	task_cleanup_force
+	task_cleanup_shutdown;
+
+Line 8001-8050 Funcs:
+task_finalize:
+	task_shutdown
+	task_subsystem_stop
+	task_kmem_cache_destroy
+	task_hash_destroy
+	task_id_allocator_free
+	task_rcu_synchronize
+	task_refcount_check
+	task_manager_exit
+	task_system_release
+	task_module_cleanup;
+
+end;
+
+proc/sched_nt.c:
+Line 1-80 Class:
+nt_eprocess_struct
+nt_ethread_struct
+nt_kprocess_struct
+nt_kthread_struct
+nt_job_object_struct
+nt_fiber_struct
+nt_tib_struct
+nt_peb_struct
+nt_teb_struct
+nt_dos_pcb_struct;
+
+Line 81-160 Funcs:
+nt_to_bible_init:
+	init_nt_translator
+	init_nt_bible_mapping
+	init_winnt_tables
+	init_win9x_tables
+	init_dos_tables
+	register_nt_handlers
+	init_peb_translator;
+
+Line 161-240 Funcs:
+nt_process_translate:
+	nt_eprocess_to_bible_task
+	nt_kprocess_to_bible_task
+	convert_nt_pid
+	convert_nt_cid
+	translate_nt_peb
+	translate_nt_process_priority
+	map_nt_process_quota
+	remap_nt_process_affinity
+	translate_nt_process_token;
+nt_process_import:
+	import_nt_process
+	validate_nt_eprocess
+	extract_nt_process_data
+	alloc_bible_from_nt_process
+	clone_bible_task_attrs_nt;
+
+Line 241-320 Funcs:
+nt_thread_translate:
+	nt_ethread_to_bible_thread
+	nt_kthread_to_bible_thread
+	convert_nt_tid
+	translate_nt_teb
+	translate_nt_thread_state
+	map_nt_thread_context
+	remap_nt_thread_stack
+	translate_nt_thread_priority
+	convert_nt_base_priority;
+nt_thread_import:
+	import_nt_thread
+	validate_nt_ethread
+	extract_nt_thread_regs
+	extract_nt_thread_fpu
+	alloc_bible_thread_from_nt
+	inherit_nt_thread_attrs;
+
+Line 321-400 Funcs:
+nt_job_translate:
+	nt_job_object_to_bible_work
+	convert_nt_job_id
+	translate_nt_job_name
+	map_nt_job_limits
+	remap_nt_job_basic_limits
+	translate_nt_job_ui_limits
+	convert_nt_job_cpu_rate
+	map_nt_job_io_rate
+	translate_nt_job_memory_limit;
+nt_job_import:
+	import_nt_job_object
+	validate_nt_job
+	extract_nt_job_data
+	alloc_bible_work_from_job
+	set_bible_work_limits
+	attach_processes_to_work;
+
+Line 401-480 Funcs:
+nt_fiber_translate:
+	nt_fiber_to_bible_activity
+	convert_nt_fiber_id
+	translate_nt_fiber_state
+	map_nt_fiber_stack
+	remap_nt_fiber_context
+	translate_nt_fls_data
+	convert_nt_fiber_scheduler
+	map_nt_win9x_fiber
+	translate_nt_fiber_local_storage;
+nt_fiber_import:
+	import_nt_fiber
+	validate_nt_fiber
+	extract_nt_fiber_data
+	alloc_bible_activity_from_fiber
+	switch_to_fiber_mode
+	yield_fiber_activity;
+
+Line 481-560 Funcs:
+nt_dos_translate:
+	dos_pcb_to_bible_multiproc
+	dos_single_to_bible_multi
+	convert_dos_psp
+	translate_dos_environment
+	map_dos_mcb
+	remap_dos_sda
+	translate_dos_dta
+	convert_dos_ivt
+	map_dos_bios_parameters;
+nt_dos_import:
+	import_dos_process
+	validate_dos_pcb
+	extract_dos_process_data
+	create_bible_multiproc_from_dos
+	expand_dos_single_to_multi
+	emulate_dos_in_bible;
+
+Line 561-640 Funcs:
+nt_vdm_translate:
+	nt_vdm_to_bible_vm
+	translate_nt_ntvdm
+	map_dos_box
+	remap_win16_on_win32
+	translate_dos_protected_mode
+	convert_vdm_dos_extender
+	map_vdm_ems_memory
+	translate_vdm_xms_memory;
+nt_vdm_import:
+	import_nt_vdm
+	validate_nt_vdm
+	extract_vdm_data
+	create_dos_environment_in_bible
+	run_dos_app_on_bible;
+
+Line 641-720 Funcs:
+nt_peb_translate:
+	nt_peb_to_bible_proc_info
+	convert_nt_peb_image
+	translate_nt_peb_parameters
+	map_nt_peb_ldr
+	remap_nt_peb_heap
+	translate_nt_peb_process_heaps
+	convert_nt_peb_os_version
+	map_nt_peb_flags;
+nt_peb_import:
+	import_nt_peb
+	validate_nt_peb
+	extract_nt_peb_data
+	setup_bible_image_info
+	create_bible_peb_equivalent;
+
+Line 721-800 Funcs:
+nt_teb_translate:
+	nt_teb_to_bible_thread_info
+	convert_nt_teb_stack
+	translate_nt_teb_tib
+	map_nt_teb_peb
+	remap_nt_teb_last_error
+	translate_nt_teb_current_locale
+	convert_nt_teb_wow32
+	map_nt_teb_exception_list;
+nt_teb_import:
+	import_nt_teb
+	validate_nt_teb
+	extract_nt_teb_data
+	setup_bible_thread_info
+	create_bible_teb_equivalent;
+
+Line 801-880 Funcs:
+nt_apc_translate:
+	nt_apc_to_bible_async
+	convert_nt_user_apc
+	translate_nt_kernel_apc
+	map_nt_special_apc
+	remap_nt_apc_queue
+	translate_nt_apc_state
+	convert_nt_apc_pending;
+nt_apc_import:
+	import_nt_apc
+	validate_nt_apc
+	extract_nt_apc_data
+	setup_bible_async_calls
+	deliver_bible_apc;
+
+Line 881-960 Funcs:
+nt_dpc_translate:
+	nt_dpc_to_bible_dpc
+	convert_nt_dpc_routine
+	translate_nt_dpc_queue
+	map_nt_threaded_dpc
+	remap_nt_dpc_importance
+	translate_nt_dpc_balance;
+nt_dpc_import:
+	import_nt_dpc
+	validate_nt_dpc
+	extract_nt_dpc_data
+	setup_bible_dpc
+	queue_bible_dpc;
+
+Line 961-1040 Funcs:
+nt_irql_translate:
+	nt_irql_to_bible_ipl
+	convert_nt_irql_level
+	translate_nt_irql_raise
+	map_nt_irql_lower
+	remap_nt_passive_level
+	translate_nt_apc_level
+	convert_nt_dispatch_level
+	map_nt_dpc_level;
+nt_irql_import:
+	import_nt_irql
+	validate_nt_irql
+	extract_nt_irql_data
+	set_bible_ipl
+	restore_bible_ipl;
+
+Line 1041-1120 Funcs:
+nt_sync_objects:
+	nt_mutex_to_bible_mutex
+	nt_semaphore_to_bible_sem
+	nt_event_to_bible_event
+	nt_timer_to_bible_timer
+	nt_executive_resource_to_bible
+	nt_fast_mutex_to_bible
+	nt_push_lock_to_bible
+	nt_execute_spinlock_to_bible;
+nt_sync_import:
+	import_nt_sync_object
+	validate_nt_sync
+	extract_nt_sync_data
+	create_bible_sync_from_nt
+	signal_bible_from_nt;
+
+Line 1121-1200 Funcs:
+nt_memory_translate:
+	nt_vad_to_bible_vm
+	convert_nt_vad_root
+	translate_nt_memory_section
+	map_nt_working_set
+	remap_nt_ws_swap
+	translate_nt_awe
+	convert_nt_large_pages
+	map_nt_virtual_address_descriptor;
+nt_memory_import:
+	import_nt_vad
+	validate_nt_vad
+	extract_nt_memory_data
+	recreate_bible_vm_from_nt
+	lock_bible_pages_from_nt;
+
+Line 1201-1280 Funcs:
+nt_io_translate:
+	nt_irp_to_bible_io
+	convert_nt_irp_stack
+	translate_nt_io_completion
+	map_nt_file_object
+	remap_nt_device_object
+	translate_nt_driver_object
+	convert_nt_iopb;
+nt_io_import:
+	import_nt_irp
+	validate_nt_io
+	extract_nt_io_data
+	queue_bible_io_from_nt
+	complete_bible_io;
+
+Line 1281-1360 Funcs:
+nt_priority:
+	nt_priority_to_bible_prio
+	convert_nt_dynamic_priority
+	translate_nt_base_priority
+	map_nt_priority_class
+	remap_nt_realtime_priority
+	translate_nt_variable_priority
+	convert_nt_foreground_boost;
+nt_priority_import:
+	import_nt_priority
+	validate_nt_priority
+	extract_nt_prio_data
+	set_bible_priority_from_nt
+	adjust_bible_priority;
+
+Line 1361-1440 Funcs:
+nt_quantum:
+	nt_quantum_to_bible_slice
+	convert_nt_quantum_length
+	translate_nt_quantum_remaining
+	map_nt_quantum_reset
+	remap_nt_quantum_increment
+	translate_nt_quantum_decrement
+	convert_nt_quantum_boost;
+nt_quantum_import:
+	import_nt_quantum
+	validate_nt_quantum
+	extract_nt_quantum_data
+	set_bible_slice_from_nt
+	charge_bible_slice;
+
+Line 1441-1520 Funcs:
+nt_affinity:
+	nt_affinity_to_bible_cpumask
+	convert_nt_system_affinity
+	translate_nt_hard_affinity
+	map_nt_soft_affinity
+	remap_nt_ideal_processor
+	translate_nt_processor_priority;
+nt_affinity_import:
+	import_nt_affinity
+	validate_nt_affinity
+	extract_nt_affinity_data
+	set_bible_cpumask_from_nt
+	migrate_for_affinity;
+
+Line 1521-1600 Funcs:
+nt_token_translate:
+	nt_token_to_bible_cred
+	convert_nt_token_user
+	translate_nt_token_groups
+	map_nt_token_privileges
+	remap_nt_token_owner
+	translate_nt_token_primary_group
+	convert_nt_token_default_dacl
+	map_nt_token_integrity_level;
+nt_token_import:
+	import_nt_token
+	validate_nt_token
+	extract_nt_token_data
+	create_bible_cred_from_token
+	impersonate_bible_thread;
+
+Line 1601-1680 Funcs:
+nt_handle_translate:
+	nt_handle_table_to_bible_fd
+	convert_nt_handle_value
+	translate_nt_handle_attributes
+	map_nt_object_pointer
+	remap_nt_handle_granted_access
+	translate_nt_handle_count;
+nt_handle_import:
+	import_nt_handle_table
+	validate_nt_handle
+	extract_nt_handle_data
+	create_bible_fd_from_nt
+	duplicate_bible_handle;
+
+Line 1681-1760 Funcs:
+nt_ldr_translate:
+	nt_ldr_data_to_bible_loader
+	convert_nt_ldr_module
+	translate_nt_ldr_init_order
+	map_nt_ldr_load_order
+	remap_nt_ldr_memory_order
+	translate_nt_ldr_entry_point;
+nt_ldr_import:
+	import_nt_ldr_data
+	validate_nt_ldr
+	extract_nt_ldr_data
+	load_bible_module_from_nt
+	resolve_bible_imports;
+
+Line 1761-1840 Funcs:
+nt_win32k_translate:
+	nt_win32k_to_bible_gui
+	convert_nt_window_station
+	translate_nt_desktop
+	map_nt_thread_input
+	remap_nt_hook_engine
+	translate_nt_user_handle;
+nt_win32k_import:
+	import_nt_win32k
+	validate_nt_win32k
+	extract_nt_win32k_data
+	setup_bible_gui_from_nt
+	emulate_win32k_in_bible;
+
+Line 1841-1920 Funcs:
+nt_wow64_translate:
+	nt_wow64_to_bible_32bit
+	convert_nt_wow64_context
+	translate_nt_wow64_stack
+	map_nt_wow64_heap
+	remap_nt_wow64_peb
+	translate_nt_wow64_thunk;
+nt_wow64_import:
+	import_nt_wow64
+	validate_nt_wow64
+	extract_nt_wow64_data
+	setup_bible_32bit_env
+	switch_bible_to_32bit;
+
+Line 1921-2000 Funcs:
+nt_dos_memory:
+	dos_memory_to_bible_mem
+	convert_dos_conventional
+	translate_dos_upper_memory
+	map_dos_expanded_memory
+	remap_dos_extended_memory
+	translate_dos_hma
+	convert_dos_umb;
+dos_memory_import:
+	import_dos_memory
+	validate_dos_memory
+	extract_dos_memory_data
+	allocate_bible_memory_for_dos
+	emulate_dos_memory;
+
+Line 2001-2080 Funcs:
+nt_dos_interrupts:
+	dos_int_to_bible_int
+	convert_dos_int_21h
+	translate_dos_int_10h
+	map_dos_int_13h
+	remap_dos_int_15h
+	translate_dos_int_2fh
+	convert_dos_tsr_hooks;
+dos_interrupts_import:
+	import_dos_interrupts
+	validate_dos_ivt
+	extract_dos_int_data
+	setup_bible_int_handlers
+	trap_dos_to_bible;
+
+Line 2081-2160 Funcs:
+nt_win9x_vm:
+	win9x_vm_to_bible_vm
+	convert_win9x_vmm
+	translate_win9x_vxd
+	map_win9x_ring0
+	remap_win9x_ring3
+	translate_win9x_dpm;
+win9x_vm_import:
+	import_win9x_vm
+	validate_win9x_vm
+	extract_win9x_vm_data
+	run_win9x_on_bible
+	emulate_vxd_in_bible;
+
+Line 2161-2240 Funcs:
+nt_batch_translate:
+	batch_translate_processes
+	batch_translate_threads
+	batch_translate_jobs
+	batch_translate_fibers
+	batch_translate_dos
+	batch_translate_tokens
+	batch_translate_handles;
+nt_batch_commit:
+	commit_process_translations
+	commit_thread_translations
+	commit_job_translations
+	commit_fiber_translations
+	commit_dos_translations
+	atomic_nt_transaction;
+
+Line 2241-2320 Funcs:
+nt_state_sync:
+	sync_nt_process_state
+	sync_nt_thread_state
+	sync_nt_job_state
+	sync_nt_fiber_state
+	sync_nt_dos_state
+	sync_nt_apc_state
+	sync_nt_irql_state;
+nt_state_import:
+	import_sync_process_state
+	import_sync_thread_state
+	import_sync_job_state
+	import_sync_fiber_state
+	import_sync_dos_state;
+
+Line 2321-2400 Funcs:
+nt_validate:
+	validate_nt_eprocess_integrity
+	validate_nt_ethread_integrity
+	validate_nt_job_integrity
+	validate_nt_fiber_integrity
+	validate_dos_pcb_integrity
+	validate_nt_token_integrity
+	validate_nt_handle_table;
+nt_verify:
+	verify_process_translation
+	verify_thread_translation
+	verify_job_translation
+	verify_fiber_translation
+	verify_dos_translation
+	verify_token_translation;
+
+Line 2401-2480 Funcs:
+nt_cache:
+	cache_nt_eprocess
+	cache_nt_ethread
+	cache_nt_job_object
+	cache_nt_fiber
+	cache_dos_pcb
+	cache_nt_token
+	cache_nt_handle_table;
+nt_invalidate:
+	invalidate_process_cache
+	invalidate_thread_cache
+	invalidate_job_cache
+	invalidate_fiber_cache
+	invalidate_dos_cache
+	invalidate_token_cache;
+
+Line 2481-2560 Funcs:
+nt_lookup:
+	lookup_nt_process_by_pid
+	lookup_nt_thread_by_tid
+	lookup_nt_job_by_id
+	lookup_nt_fiber_by_id
+	lookup_dos_by_psp
+	lookup_nt_token_by_sid;
+nt_resolve:
+	resolve_bible_to_nt_process
+	resolve_bible_to_nt_thread
+	resolve_bible_work_to_nt_job
+	resolve_bible_activity_to_fiber
+	resolve_bible_multi_to_dos;
+
+Line 2561-2640 Funcs:
+nt_subsystem:
+	nt_csrss_translate
+	nt_smss_translate
+	nt_lsass_translate
+	nt_winlogon_translate
+	nt_services_translate
+	nt_session_manager_translate;
+nt_subsystem_import:
+	import_csrss_subsystem
+	import_smss_subsystem
+	import_lsass_subsystem
+	import_winlogon_subsystem
+	import_service_control;
+
+Line 2641-2720 Funcs:
+nt_debug:
+	nt_debug_translate
+	convert_nt_debug_port
+	translate_nt_debug_event
+	map_nt_debug_buffer
+	remap_nt_debug_object
+	translate_nt_debug_exception;
+nt_debug_import:
+	import_nt_debug
+	validate_nt_debug
+	extract_nt_debug_data
+	setup_bible_debug_for_nt
+	handle_bible_debug_event;
+
+Line 2721-2800 Funcs:
+nt_translation_end:
+	cleanup_nt_translator
+	free_nt_tables
+	unregister_nt_handlers
+	flush_nt_translations
+	nt_translator_shutdown
+	finalize_nt_conversions
+	close_nt_emulation;
+
+end;
