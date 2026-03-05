@@ -114,6 +114,7 @@ struct bk_register_header {
     BK_SPINLOCK      r_lock;       // Per-register lock
     // ... common fields for all registers
 };
+```
 
 // Hierarchy (inspired by Hybrid Kernels but extended):
 // WORK (set of processes) → PROCESS (container) → TASK (resource group) → THREAD (execution) → ACTIVITY (atomic work)
