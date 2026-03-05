@@ -47,7 +47,7 @@ production hybrid kernels, your expertise would be invaluable.
 | `proc/sched_prim.c` | **EEVDF** scheduler primitives | `kern/sched_prim.c` |
 | `proc/sched_mach.c` | **Mach translation layer** (Tasks/Threads) | `kern/bsd_kern.c` |
 | `proc/sched_timeshare.h` | **EDGE** timeshare scheduling | `kern/sched_clutch.c` |
-| `proc/sched_fair.c` | **CFS** fair scheduling | `linux/kernel/sched/core.c` |
+| `proc/sched_fair.c` | **CFS** fair scheduling | `linux/kernel/sched/fair.c` |
 | `proc/work.c` | **Coalition/cgroup** equivalent | `linux/cgroup/*.c` |
 | `proc/thread.c` | Thread management | `kern/thread.c` |
 | `proc/thread.h` | Thread interfaces | `kern/thread.h` |
