@@ -87,10 +87,14 @@ production hybrid kernels, your expertise would be invaluable.
 | `kinterrupt/traps.c` | Trap handling implementation |
 | `kexceptions/traps.h` | Exceptions Traps Interface |
 | `kexceptions/traps.c` | Trap handling implementation |
-| `bshc/ldt.h` | Exceptions Traps Interface |
-| `bshc/idt.h` | Trap handling implementation |
-| `bshc/gdt.h` | Exceptions Traps Interface |
-| `bshc/hardware_page.h` | Trap handling implementation |
+| `bshc/ldt.h` | LDT Interface |
+| `bshc/idt.h` | IDT Interface |
+| `bshc/gdt.h` | GDT Interface |
+| `bshc/hardware_page.h` | HAL Page Interface |
+| `bshc/ldt.c` | LDT Implementation |
+| `bshc/idt.c` | IDT implementation|
+| `bshc/gdt.c` | GDT implementation |
+| `bshc/hardware_page.c` | DMA Page implementation |
 ===============================================================================
                          THE "EVERYTHING IS A REGISTER" ARCHITECTURE
 ===============================================================================
@@ -145,3 +149,4 @@ Version 1.3: Proprietary (see PROPIETAREY)
 Open versions: 2.1, 3.0, 4.7, 5.7, 6.4, 7.0, 8.7, 9.2
 
 Future reopening: Version 10.1 build 17000 will be MIT open again
+WARNING: This kernel is not UNIX-like or UNIX-based.
