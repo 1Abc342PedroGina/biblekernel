@@ -20,6 +20,9 @@
 
 #define BK_PM_PAGE_MASK		(BK_PM_PAGE_SIZE - 1)
 
+
+typedef BK_UINT64 BK_PM_SIZE;	/* Tamanho da memória física */
+
 /* Endereços físicos */
 typedef BK_VM_PADDR BK_PM_PADDR;
 
@@ -272,5 +275,6 @@ void bk_pm_early_free(BK_PM_PAGE *page);
 BK_I32 bk_pm_reserve(BK_PM_PADDR start, BK_PM_PADDR end);
 BK_I32 bk_pm_unreserve(BK_PM_PADDR start, BK_PM_PADDR end);
 BK_BOOLEAN bk_pm_is_reserved(BK_PM_PADDR addr);
+
 
 #endif /* !_BIBLE_PMAP_H_ */
