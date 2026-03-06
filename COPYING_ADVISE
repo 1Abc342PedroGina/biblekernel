@@ -80,6 +80,59 @@ the idea, and I will give special thanks to everyone, regardless of whether
 it's free or paid, especially since my pockets are empty.
 
 =============================================================================
+                    LICENSE COMPATIBILITY REQUIREMENT
+=============================================================================
+
+All contributions to the Bible Kernel (BK) MUST be licensed under one of the
+following **TOLERATED LICENSES**:
+
+   ✅ MIT License (preferred)
+   ✅ BSD 2-Clause, 3-Clause, or 4-Clause (with advertising clause allowed)
+   ✅ Apache License 2.0
+   ✅ Microsoft Public License (Ms-PL)
+
+**DUAL LICENSE REQUIREMENT FOR CERTAIN LICENSES:**
+
+The following licenses are **TOLERATED ONLY IF DUAL-LICENSED** with MIT or BSD:
+
+   ✅ APSL (Apple Public Source License) + MIT/BSD
+   ✅ MPL (Mozilla Public License) + MIT/BSD
+   ✅ EPL (Eclipse Public License) + MIT/BSD
+   ✅ LGPL (GNU Lesser General Public License) + MIT/BSD
+
+**Reason:** BK uses a dual licensing model (MIT Open + Proprietary). 
+APSL, MPL, EPL, LGPL have specific requirements that may conflict with 
+proprietary versions. Dual-licensing with MIT/BSD ensures that the user
+has the **total freedom to choose** which license to use, allowing the
+code to be included in both open and proprietary versions of BK.
+
+**The following licenses are STRICTLY PROHIBITED:**
+
+   ❌ GNU General Public License (GPL) any version
+   ❌ GNU Affero General Public License (AGPL)
+   ❌ Common Development and Distribution License (CDDL)
+   ❌ Any other "viral" or copyleft license not explicitly listed as tolerated
+
+If you contribute code under an incompatible license, your contribution
+will be rejected or you will be asked to relicense it under a tolerated
+license.
+
+=============================================================================
+                    DUAL LICENSE EXPLANATION
+=============================================================================
+
+When a contribution is dual-licensed (e.g., APSL + MIT), it means:
+
+1. The contributor retains the copyright
+2. The code is available under BOTH licenses
+3. The user (Bible Kernel) can choose which license to apply
+4. For BK's purposes, we choose the MIT license for open versions
+   and the proprietary license for proprietary versions
+
+This gives us maximum flexibility while respecting the contributor's
+original intent.
+
+=============================================================================
                          FAITH AND RESPECT CLAUSE
 =============================================================================
 
