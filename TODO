@@ -1,6 +1,6 @@
 proc/context_switch.c:
 Line 120 Class:
-ctx_in_c struct
+ struct ctx_in_c 
 
 Line 160 Funcs:
 save_ctx:
