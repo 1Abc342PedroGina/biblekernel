@@ -21,3 +21,53 @@ Learn more at:
 file "LICENSE"
 file "COPYING_ADVISE"
 file "PROPIETARY"
+
+## How do I compile the kernel? (This is only when the code is ready)
+
+First, have the Makefile compile tools/config_kern.c
+
+And after that, the makefile itself executes the compiled software that was previously the .c code in tools/config_kern.c
+
+```text
+make .conf.kern
+```
+
+The question will be: Which parts will be in ring 0, and which in ring 3? The parts within src/base/../, src/kfirmware, src/boot, src/abi, and src/api must be in ring 0. For usr/../, the user decides whether it's ring 3 or ring 0; in this context, usr doesn't stand for Unix System Resource but is an abbreviation for User.
+
+Example output:
+X=r0
+A=r3...
+
+## The CFLAGS (-D) instructions for the C preprocessor to set a macro (a constant or compilation flag) even before the code is compiled are:
+-D_BK_KERNEL
+-DKERNEL
+-D_KERNEL
+-DBIBLE
+-DKERN...
+
+## Build Kernel
+
+Then, use:
+```text
+make kernel ARCH=X INC=../incl, ../base/../, ../kfirmware/inc/, ../api/, ../usr/incl OBJ_FMT=Y(ex:coff or elf) CONFIG=Z(REGEN(RE=RELEASE), REBIBLE, DEB(DEBUG), DEV(DEVELOPER)
+```
+to compile only the files in ring 0, and then link them into a single binary called `biblekernel.cae`.
+
+## Build User Driver
+
+If optional and you wish, you can compile the driver and file system software in user mode using 
+```text
+make usr
+```
+
+## HOW TO COMPACT THE KERNEL
+
+To compress the kernel you will use: 
+```text
+make compress kernel
+```
+
+This compresses the kernel as follows: If the architecture is x86, PPC64, and/or ARM32, it will be compressed in Gzip;
+if it is x64, ARM64, and/or RISC-V, it will be compressed in LZMA.
+
+and then compiles the files inside ../descompress, and then links the files into a single binary called booz.
