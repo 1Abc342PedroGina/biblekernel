@@ -103,6 +103,15 @@ typedef BK_REGISTER_HANDLE BK_BOOLEAN;
  * Estruturas de dados para gerenciamento de memória virtual
  */
 
+struct __bk_vm_page {
+    BK_UINT64       p_pfn;          /* Número da página física */
+    BK_REFCOUNT     p_refcnt;       /* Contador de referências */
+    BK_UINT32       p_flags;        /* Flags da página */
+    BK_LIST_ENTRY(__bk_vm_page) p_list;   /* Links para listas de páginas */
+};
+
+typedef struct __bk_vm_page BK_VM_PAGE;
+
 /* Entrada de endereço virtual (Virtual Address Descriptor) */
 struct __bk_vm_vad {
 	BK_VM_OFFSET	v_start;	/* Endereço inicial */
@@ -276,5 +285,6 @@ BK_I32 bk_vm_page_fault_handler(BK_VM_OFFSET addr, BK_UINT32 fault_type,
 #define	MAP_SHARED	BK_VM_MAP_SHARED
 
 #endif /* !_BK_NO_COMPAT */
+
 
 #endif /* !_BIBLE_VM_H_ */
