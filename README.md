@@ -14,3 +14,10 @@ Contributions that mock or criticize Christianity will not be accepted.
 This is a condition of participation, regardless of the version (open or proprietary).
 
 All are welcome to use and contribute, as long as this respect is maintained.
+
+## advise
+
+Learn more at:
+file "LICENSE"
+file "COPYING_ADVISE"
+file "PROPIETARY"
