@@ -3805,3 +3805,549 @@ task_finalize:
 	task_module_cleanup;
 
 end;
+
+proc/sched_l4.c:
+Line 1-80 Class:
+sel4_cspace_struct_in_c 
+sel4_vspace_struct_in_c 
+sel4_tcb_struct_in_c 
+sel4_cnode_struct_in_c 
+sel4_vnode_struct_in_c 
+sel4_pd_struct_in_c 
+sel4_pt_struct_in_c 
+sel4_cap_struct_in_c 
+sel4_cptr_struct_in_c 
+sel4_capability_struct_in_c 
+sel4_badge_struct_in_c 
+sel4_cnode_index_struct_in_c;
+
+Line 81-160 Funcs:
+sel4_to_bible_init:
+	init_sel4_translator
+	init_sel4_bible_mapping
+	init_cspace_tables
+	init_vspace_tables
+	init_tcb_tables
+	init_cap_translation
+	register_sel4_handlers
+	init_sel4_bootstrap;
+
+Line 161-240 Funcs:
+sel4_cspace_to_bible_proc:
+	cspace_to_bible_process
+	convert_cspace_root_cnode
+	translate_cspace_capability
+	map_cspace_cnode
+	remap_cspace_slot
+	translate_cspace_depth
+	convert_cspace_guard
+	map_cspace_guard_size
+	translate_cspace_radix;
+sel4_cspace_import:
+	import_sel4_cspace
+	validate_sel4_cspace
+	extract_cspace_caps
+	alloc_bible_proc_from_cspace
+	build_bible_proc_cap_table;
+
+Line 241-320 Funcs:
+sel4_vspace_to_bible_task:
+	vspace_to_bible_task_region
+	convert_vspace_page_directory
+	translate_vspace_page_table
+	map_vspace_frame
+	remap_vspace_page
+	translate_vspace_mapping
+	convert_vspace_attributes
+	map_vspace_rights
+	translate_vspace_cache_policy;
+sel4_vspace_import:
+	import_sel4_vspace
+	validate_sel4_vspace
+	extract_vspace_mappings
+	alloc_bible_task_from_vspace
+	build_bible_task_vm_layout;
+
+Line 321-400 Funcs:
+sel4_tcb_to_bible_thread:
+	tcb_to_bible_thread
+	convert_tcb_context
+	translate_tcb_state
+	map_tcb_ipc_buffer
+	remap_tcb_priority
+	translate_tcb_max_priority
+	convert_tcb_mcp
+	map_tcb_fault_handler
+	translate_tcb_activation;
+sel4_tcb_import:
+	import_sel4_tcb
+	validate_sel4_tcb
+	extract_tcb_registers
+	alloc_bible_thread_from_tcb
+	setup_bible_thread_state;
+
+Line 401-480 Funcs:
+sel4_cap_translate:
+	cap_to_bible_resource
+	convert_cap_type
+	translate_cap_rights
+	map_cap_badge
+	remap_cap_data
+	translate_cap_domain
+	convert_cap_reply
+	map_cap_cnode
+	translate_cap_irq;
+sel4_cap_import:
+	import_sel4_cap
+	validate_sel4_cap
+	extract_cap_data
+	alloc_bible_rsrc_from_cap
+	insert_cap_into_bible_proc;
+
+Line 481-560 Funcs:
+sel4_cnode_translate:
+	cnode_to_bible_proc
+	convert_cnode_cap
+	translate_cnode_slot
+	map_cnode_index
+	remap_cnode_depth
+	translate_cnode_guard
+	convert_cnode_table
+	map_cnode_next;
+sel4_cnode_import:
+	import_sel4_cnode
+	validate_sel4_cnode
+	extract_cnode_slots
+	build_bible_proc_cnode
+	walk_cnode_in_bible;
+
+Line 561-640 Funcs:
+sel4_pd_translate:
+	pd_to_bible_task
+	convert_pd_hardware
+	translate_pd_size
+	map_pd_entry
+	remap_pd_flags
+	translate_pd_domain
+	convert_pd_asid
+	map_pd_global;
+sel4_pd_import:
+	import_sel4_pd
+	validate_sel4_pd
+	extract_pd_entries
+	build_bible_task_pd
+	activate_pd_in_bible;
+
+Line 641-720 Funcs:
+sel4_pt_translate:
+	pt_to_bible_task_region
+	convert_pt_level
+	translate_pt_entry
+	map_pt_next
+	remap_pt_leaf
+	translate_pt_attributes
+	convert_pt_mapping
+	map_pt_pte;
+sel4_pt_import:
+	import_sel4_pt
+	validate_sel4_pt
+	extract_pt_entries
+	add_pt_to_bible_task
+	walk_pt_in_bible;
+
+Line 721-800 Funcs:
+sel4_frame_translate:
+	frame_to_bible_page
+	convert_frame_paddr
+	translate_frame_size
+	map_frame_vaddr
+	remap_frame_attributes
+	translate_frame_cacheable
+	convert_frame_device
+	map_frame_dma;
+sel4_frame_import:
+	import_sel4_frame
+	validate_sel4_frame
+	extract_frame_data
+	map_frame_in_bible_task
+	share_frame_between_tasks;
+
+Line 801-880 Funcs:
+sel4_ipc_buffer_translate:
+	ipc_buffer_to_bible_ipc
+	convert_ipc_buffer_id
+	translate_ipc_buffer_data
+	map_ipc_buffer_slot
+	remap_ipc_buffer_cap
+	translate_ipc_buffer_msg
+	convert_ipc_buffer_label;
+sel4_ipc_buffer_import:
+	import_sel4_ipc_buffer
+	validate_sel4_ipc_buffer
+	extract_ipc_buffer_data
+	alloc_bible_ipc_from_sel4
+	setup_bible_ipc_channel;
+
+Line 881-960 Funcs:
+sel4_endpoint_translate:
+	endpoint_to_bible_channel
+	convert_endpoint_cap
+	translate_endpoint_queue
+	map_endpoint_state
+	remap_endpoint_badge
+	translate_endpoint_ep
+	convert_endpoint_send;
+sel4_endpoint_import:
+	import_sel4_endpoint
+	validate_sel4_endpoint
+	extract_endpoint_data
+	create_bible_channel_from_ep
+	connect_bible_threads;
+
+Line 961-1040 Funcs:
+sel4_notification_translate:
+	notification_to_bible_signal
+	convert_notification_cap
+	translate_notification_data
+	map_notification_state
+	remap_notification_bound_tcb
+	translate_notification_ep;
+sel4_notification_import:
+	import_sel4_notification
+	validate_sel4_notification
+	extract_notification_data
+	create_bible_signal_from_ntfn
+	bind_bible_thread_to_signal;
+
+Line 1041-1120 Funcs:
+sel4_reply_cap_translate:
+	reply_cap_to_bible_reply
+	convert_reply_cap_tcb
+	translate_reply_cap_state
+	map_reply_cap_data
+	remap_reply_cap_has_reply
+	translate_reply_cap_may_reply;
+sel4_reply_cap_import:
+	import_sel4_reply_cap
+	validate_sel4_reply_cap
+	extract_reply_cap_data
+	create_bible_reply_channel
+	send_reply_in_bible;
+
+Line 1121-1200 Funcs:
+sel4_domain_translate:
+	domain_to_bible_work
+	convert_domain_id
+	translate_domain_sched
+	map_domain_cpus
+	remap_domain_caps
+	translate_domain_memory;
+sel4_domain_import:
+	import_sel4_domain
+	validate_sel4_domain
+	extract_domain_data
+	create_bible_work_from_domain
+	assign_bible_procs_to_work;
+
+Line 1201-1280 Funcs:
+sel4_capability_walk:
+	walk_cspace_caps
+	walk_cnode_caps
+	traverse_cspace
+	enumerate_capabilities
+	collect_cap_dependencies
+	resolve_cap_references
+	find_cap_by_cptr
+	find_cap_by_type;
+
+Line 1281-1360 Funcs:
+sel4_vspace_walk:
+	walk_vspace_pd
+	walk_vspace_pt
+	traverse_vspace
+	enumerate_mappings
+	collect_vma_regions
+	resolve_vaddr_to_frame
+	find_vspace_by_vaddr
+	translate_vspace_hierarchy;
+
+Line 1361-1440 Funcs:
+sel4_tcb_state_translate:
+	translate_tcb_running
+	translate_tcb_resting
+	translate_tcb_blocked
+	translate_tcb_suspended
+	translate_tcb_idle
+	translate_tcb_faulted
+	convert_tcb_state_to_bible
+	map_bible_state_to_tcb;
+
+Line 1441-1520 Funcs:
+sel4_fault_translate:
+	fault_to_bible_exception
+	convert_fault_type
+	translate_fault_address
+	map_fault_ip
+	remap_fault_sp
+	translate_fault_flags
+	convert_fault_data;
+sel4_fault_import:
+	import_sel4_fault
+	validate_sel4_fault
+	extract_fault_data
+	deliver_fault_in_bible
+	handle_bible_exception;
+
+Line 1521-1600 Funcs:
+sel4_syscall_translate:
+	syscall_to_bible_syscall
+	convert_syscall_id
+	translate_syscall_args
+	map_syscall_caps
+	remap_syscall_badge
+	translate_syscall_data;
+sel4_syscall_import:
+	import_sel4_syscall
+	validate_sel4_syscall
+	extract_syscall_data
+	emulate_syscall_in_bible
+	return_to_bible;
+
+Line 1601-1680 Funcs:
+sel4_irq_translate:
+	irq_to_bible_interrupt
+	convert_irq_number
+	translate_irq_handler
+	map_irq_cap
+	remap_irq_control
+	translate_irq_trigger;
+sel4_irq_import:
+	import_sel4_irq
+	validate_sel4_irq
+	extract_irq_data
+	route_interrupt_to_bible
+	deliver_bible_irq;
+
+Line 1681-1760 Funcs:
+sel4_cspace_validate:
+	validate_cspace_structure
+	validate_cnode_hierarchy
+	validate_cap_references
+	validate_cap_permissions
+	validate_cspace_depth
+	validate_guard_bits
+	check_cspace_integrity;
+
+Line 1761-1840 Funcs:
+sel4_vspace_validate:
+	validate_vspace_mappings
+	validate_pd_entries
+	validate_pt_entries
+	validate_memory_attributes
+	validate_asid_pool
+	validate_hardware_mappings
+	check_vspace_integrity;
+
+Line 1841-1920 Funcs:
+sel4_tcb_validate:
+	validate_tcb_context
+	validate_tcb_registers
+	validate_tcb_ipc_buffer
+	validate_tcb_priority
+	validate_tcb_fault_handler
+	validate_tcb_activation
+	check_tcb_integrity;
+
+Line 1921-2000 Funcs:
+sel4_batch_translate:
+	batch_translate_cspaces
+	batch_translate_vspaces
+	batch_translate_tcbs
+	batch_translate_caps
+	batch_translate_endpoints
+	batch_translate_notifications;
+sel4_batch_commit:
+	commit_cspace_translations
+	commit_vspace_translations
+	commit_tcb_translations
+	commit_cap_translations
+	commit_endpoint_translations
+	atomic_sel4_transaction;
+
+Line 2001-2080 Funcs:
+sel4_state_sync:
+	sync_cspace_state
+	sync_vspace_state
+	sync_tcb_state
+	sync_cap_state
+	sync_ipc_state
+	sync_fault_state;
+sel4_state_import:
+	import_sync_cspace_state
+	import_sync_vspace_state
+	import_sync_tcb_state
+	import_sync_cap_state
+	import_sync_ipc_state;
+
+Line 2081-2160 Funcs:
+sel4_dependency_resolve:
+	resolve_cap_dependencies
+	resolve_cnode_dependencies
+	resolve_pd_dependencies
+	resolve_tcb_dependencies
+	resolve_endpoint_dependencies
+	build_cspace_dependency_graph;
+sel4_dependency_import:
+	import_with_sel4_deps
+	validate_sel4_dependencies
+	resolve_cross_cap_links
+	fixup_dangling_caps
+	complete_cspace_chain;
+
+Line 2161-2240 Funcs:
+sel4_hierarchy_build:
+	build_cspace_hierarchy
+	build_vspace_hierarchy
+	build_tcb_hierarchy
+	build_capability_tree
+	link_cspaces_to_vspaces
+	link_tcbs_to_cspaces
+	create_sel4_object_graph;
+
+Line 2241-2320 Funcs:
+sel4_cspace_export:
+	export_cspace_to_bible_proc
+	export_cnode_table
+	export_cap_list
+	export_cspace_stats
+	export_cspace_usage
+	format_cspace_for_bible;
+
+Line 2321-2400 Funcs:
+sel4_vspace_export:
+	export_vspace_to_bible_task
+	export_pd_table
+	export_pt_hierarchy
+	export_mapping_list
+	export_vspace_stats
+	export_memory_usage;
+
+Line 2401-2480 Funcs:
+sel4_tcb_export:
+	export_tcb_to_bible_thread
+	export_tcb_registers
+	export_tcb_state
+	export_tcb_ipc
+	export_tcb_priority
+	export_tcb_stats;
+
+Line 2481-2560 Funcs:
+sel4_cspace_cache:
+	cache_sel4_cspace
+	cache_sel4_cnode
+	cache_sel4_cap
+	cache_sel4_cptr
+	update_cspace_cache
+	invalidate_cspace_cache
+	flush_cspace_cache
+	lookup_cspace_cache;
+
+Line 2561-2640 Funcs:
+sel4_vspace_cache:
+	cache_sel4_vspace
+	cache_sel4_pd
+	cache_sel4_pt
+	cache_sel4_frame
+	update_vspace_cache
+	invalidate_vspace_cache
+	flush_vspace_cache
+	lookup_vspace_cache;
+
+Line 2641-2720 Funcs:
+sel4_tcb_cache:
+	cache_sel4_tcb
+	cache_sel4_context
+	cache_sel4_state
+	cache_sel4_ipc_buffer
+	update_tcb_cache
+	invalidate_tcb_cache
+	flush_tcb_cache
+	lookup_tcb_cache;
+
+Line 2721-2800 Funcs:
+sel4_lookup:
+	lookup_cspace_by_root
+	lookup_vspace_by_pd
+	lookup_tcb_by_id
+	lookup_cap_by_cptr
+	lookup_cnode_by_index
+	lookup_frame_by_paddr;
+sel4_resolve:
+	resolve_bible_proc_to_cspace
+	resolve_bible_task_to_vspace
+	resolve_bible_thread_to_tcb
+	resolve_bible_rsrc_to_cap
+	resolve_bible_ipc_to_ep;
+
+Line 2801-2880 Funcs:
+sel4_verify:
+	verify_cspace_translation
+	verify_vspace_translation
+	verify_tcb_translation
+	verify_cap_translation
+	verify_endpoint_translation
+	verify_notification_translation;
+
+Line 2881-2960 Funcs:
+sel4_microkernel:
+	translate_sel4_bootinfo
+	convert_sel4_init_thread
+	translate_sel4_idle_thread
+	map_sel4_kernel_cspace
+	remap_sel4_kernel_vspace
+	translate_sel4_interrupts;
+sel4_kernel_import:
+	import_sel4_kernel_caps
+	import_sel4_kernel_tcbs
+	import_sel4_boot_info
+	create_bible_kernel_tasks
+	bootstrap_bible_from_sel4;
+
+Line 2961-3040 Funcs:
+sel4_ipc_translate:
+	sel4_ipc_to_bible_ipc
+	convert_ipc_message
+	translate_ipc_caps
+	map_ipc_data
+	remap_ipc_badge
+	translate_ipc_label
+	convert_ipc_length;
+sel4_ipc_import:
+	import_sel4_ipc
+	validate_sel4_ipc
+	extract_ipc_data
+	deliver_ipc_in_bible
+	receive_ipc_in_bible;
+
+Line 3041-3120 Funcs:
+sel4_debug:
+	debug_dump_cspace
+	debug_dump_vspace
+	debug_dump_tcb
+	debug_dump_caps
+	debug_validate_all
+	debug_trace_sel4
+	debug_sel4_state
+	debug_sel4_invariants;
+
+Line 3121-3200 Funcs:
+sel4_translation_end:
+	cleanup_sel4_translator
+	free_sel4_tables
+	unregister_sel4_handlers
+	flush_all_sel4_translations
+	sel4_translator_shutdown
+	finalize_sel4_conversions
+	release_sel4_objects;
+
+end;
