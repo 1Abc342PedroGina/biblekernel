@@ -52,7 +52,7 @@ end;
 
 proc/sched_prim.c:
 Line 1-150 Class:
-sched_eevdf_struct
+sched_eevdf_struct_in_c
 
 Line 151-300 Funcs:
 eevdf_init:
@@ -525,11 +525,11 @@ end;
 
 proc/sched_mach.c:
 Line 1-50 Class:
-mach_task_struct
-mach_thread_struct
-mach_port_struct
-mach_ipc_struct
-mach_vm_struct;
+mach_task_struct_in_c
+mach_thread_struct_in_c
+mach_port_struct_in_c
+mach_ipc_struct_in_c
+mach_vm_struct_in_c;
 
 Line 51-100 Funcs:
 mach_to_bk_init:
@@ -780,13 +780,13 @@ end;
 
 proc/sched_unix.c:
 Line 1-60 Class:
-unix_proc_struct
-unix_thread_struct
-unix_cred_struct
-unix_filedesc_struct
-unix_vmspace_struct
-unix_sigacts_struct
-unix_itimers_struct;
+unix_proc_struct_in_c
+unix_thread_struct_in_c
+unix_cred_struct_in_c
+unix_filedesc_struct_in_c
+unix_vmspace_struct_in_c
+unix_sigacts_struct_in_c
+unix_itimers_struct_in_c;
 
 Line 61-120 Funcs:
 unix_to_bk_init:
@@ -1157,16 +1157,16 @@ end;
 
 sched/sched_linux.c:
 Line 1-70 Class:
-linux_task_struct
-linux_thread_struct
-linux_cgroup_struct
-linux_css_set_struct
-linux_cgroup_subsys
-linux_sched_class
-linux_rq_struct
-linux_cfs_rq_struct
-linux_mm_struct
-linux_namespace_struct;
+linux_task_struct_in_c
+linux_thread_struct_in_c
+linux_cgroup_struct_in_c
+linux_css_set_struct_in_c
+linux_cgroup_subsys_in_c
+linux_sched_class_in_c
+linux_rq_struct_in_c
+linux_cfs_rq_struct_in_c
+linux_mm_struct_in_c
+linux_namespace_struct_in_c;
 
 Line 71-140 Funcs:
 linux_to_bible_init:
@@ -1666,15 +1666,15 @@ end;
 
 proc/sched_timesharing.c:
 Line 1-80 Class:
-edge_sched_struct
-edge_rq_struct
-edge_entity_struct
-edge_dl_struct
-edge_rt_struct
-edge_cfs_struct
-edge_bw_struct
-edge_period_struct
-edge_budget_struct;
+edge_sched_struct_in_c
+edge_rq_struct_in_c
+edge_entity_struct_in_c
+edge_dl_struct_in_c
+edge_rt_struct_in_c
+edge_cfs_struct_in_c
+edge_bw_struct_in_c
+edge_period_struct_in_c
+edge_budget_struct_in_c;
 
 Line 81-160 Funcs:
 edge_sched_init:
@@ -2151,20 +2151,581 @@ edge_finalize:
 
 end;
 
+proc/sched_nt.c:
+Line 1-80 Class:
+nt_eprocess_struct_in_c
+nt_ethread_struct_in_c
+nt_kprocess_struct_in_c
+nt_kthread_struct_in_c
+nt_job_object_struct_in_c
+nt_fiber_struct_in_c
+nt_tib_struct_in_c
+nt_peb_struct_in_c
+nt_teb_struct_in_c
+nt_dos_pcb_struct_in_c;
+
+Line 81-160 Funcs:
+nt_to_bible_init:
+	init_nt_translator
+	init_nt_bible_mapping
+	init_winnt_tables
+	init_win9x_tables
+	init_dos_tables
+	register_nt_handlers
+	init_peb_translator;
+
+Line 161-240 Funcs:
+nt_process_translate:
+	nt_eprocess_to_bible_task
+	nt_kprocess_to_bible_task
+	convert_nt_pid
+	convert_nt_cid
+	translate_nt_peb
+	translate_nt_process_priority
+	map_nt_process_quota
+	remap_nt_process_affinity
+	translate_nt_process_token;
+nt_process_import:
+	import_nt_process
+	validate_nt_eprocess
+	extract_nt_process_data
+	alloc_bible_from_nt_process
+	clone_bible_task_attrs_nt;
+
+Line 241-320 Funcs:
+nt_thread_translate:
+	nt_ethread_to_bible_thread
+	nt_kthread_to_bible_thread
+	convert_nt_tid
+	translate_nt_teb
+	translate_nt_thread_state
+	map_nt_thread_context
+	remap_nt_thread_stack
+	translate_nt_thread_priority
+	convert_nt_base_priority;
+nt_thread_import:
+	import_nt_thread
+	validate_nt_ethread
+	extract_nt_thread_regs
+	extract_nt_thread_fpu
+	alloc_bible_thread_from_nt
+	inherit_nt_thread_attrs;
+
+Line 321-400 Funcs:
+nt_job_translate:
+	nt_job_object_to_bible_work
+	convert_nt_job_id
+	translate_nt_job_name
+	map_nt_job_limits
+	remap_nt_job_basic_limits
+	translate_nt_job_ui_limits
+	convert_nt_job_cpu_rate
+	map_nt_job_io_rate
+	translate_nt_job_memory_limit;
+nt_job_import:
+	import_nt_job_object
+	validate_nt_job
+	extract_nt_job_data
+	alloc_bible_work_from_job
+	set_bible_work_limits
+	attach_processes_to_work;
+
+Line 401-480 Funcs:
+nt_fiber_translate:
+	nt_fiber_to_bible_activity
+	convert_nt_fiber_id
+	translate_nt_fiber_state
+	map_nt_fiber_stack
+	remap_nt_fiber_context
+	translate_nt_fls_data
+	convert_nt_fiber_scheduler
+	map_nt_win9x_fiber
+	translate_nt_fiber_local_storage;
+nt_fiber_import:
+	import_nt_fiber
+	validate_nt_fiber
+	extract_nt_fiber_data
+	alloc_bible_activity_from_fiber
+	switch_to_fiber_mode
+	yield_fiber_activity;
+
+Line 481-560 Funcs:
+nt_dos_translate:
+	dos_pcb_to_bible_multiproc
+	dos_single_to_bible_multi
+	convert_dos_psp
+	translate_dos_environment
+	map_dos_mcb
+	remap_dos_sda
+	translate_dos_dta
+	convert_dos_ivt
+	map_dos_bios_parameters;
+nt_dos_import:
+	import_dos_process
+	validate_dos_pcb
+	extract_dos_process_data
+	create_bible_multiproc_from_dos
+	expand_dos_single_to_multi
+	emulate_dos_in_bible;
+
+Line 561-640 Funcs:
+nt_vdm_translate:
+	nt_vdm_to_bible_vm
+	translate_nt_ntvdm
+	map_dos_box
+	remap_win16_on_win32
+	translate_dos_protected_mode
+	convert_vdm_dos_extender
+	map_vdm_ems_memory
+	translate_vdm_xms_memory;
+nt_vdm_import:
+	import_nt_vdm
+	validate_nt_vdm
+	extract_vdm_data
+	create_dos_environment_in_bible
+	run_dos_app_on_bible;
+
+Line 641-720 Funcs:
+nt_peb_translate:
+	nt_peb_to_bible_proc_info
+	convert_nt_peb_image
+	translate_nt_peb_parameters
+	map_nt_peb_ldr
+	remap_nt_peb_heap
+	translate_nt_peb_process_heaps
+	convert_nt_peb_os_version
+	map_nt_peb_flags;
+nt_peb_import:
+	import_nt_peb
+	validate_nt_peb
+	extract_nt_peb_data
+	setup_bible_image_info
+	create_bible_peb_equivalent;
+
+Line 721-800 Funcs:
+nt_teb_translate:
+	nt_teb_to_bible_thread_info
+	convert_nt_teb_stack
+	translate_nt_teb_tib
+	map_nt_teb_peb
+	remap_nt_teb_last_error
+	translate_nt_teb_current_locale
+	convert_nt_teb_wow32
+	map_nt_teb_exception_list;
+nt_teb_import:
+	import_nt_teb
+	validate_nt_teb
+	extract_nt_teb_data
+	setup_bible_thread_info
+	create_bible_teb_equivalent;
+
+Line 801-880 Funcs:
+nt_apc_translate:
+	nt_apc_to_bible_async
+	convert_nt_user_apc
+	translate_nt_kernel_apc
+	map_nt_special_apc
+	remap_nt_apc_queue
+	translate_nt_apc_state
+	convert_nt_apc_pending;
+nt_apc_import:
+	import_nt_apc
+	validate_nt_apc
+	extract_nt_apc_data
+	setup_bible_async_calls
+	deliver_bible_apc;
+
+Line 881-960 Funcs:
+nt_dpc_translate:
+	nt_dpc_to_bible_dpc
+	convert_nt_dpc_routine
+	translate_nt_dpc_queue
+	map_nt_threaded_dpc
+	remap_nt_dpc_importance
+	translate_nt_dpc_balance;
+nt_dpc_import:
+	import_nt_dpc
+	validate_nt_dpc
+	extract_nt_dpc_data
+	setup_bible_dpc
+	queue_bible_dpc;
+
+Line 961-1040 Funcs:
+nt_irql_translate:
+	nt_irql_to_bible_ipl
+	convert_nt_irql_level
+	translate_nt_irql_raise
+	map_nt_irql_lower
+	remap_nt_passive_level
+	translate_nt_apc_level
+	convert_nt_dispatch_level
+	map_nt_dpc_level;
+nt_irql_import:
+	import_nt_irql
+	validate_nt_irql
+	extract_nt_irql_data
+	set_bible_ipl
+	restore_bible_ipl;
+
+Line 1041-1120 Funcs:
+nt_sync_objects:
+	nt_mutex_to_bible_mutex
+	nt_semaphore_to_bible_sem
+	nt_event_to_bible_event
+	nt_timer_to_bible_timer
+	nt_executive_resource_to_bible
+	nt_fast_mutex_to_bible
+	nt_push_lock_to_bible
+	nt_execute_spinlock_to_bible;
+nt_sync_import:
+	import_nt_sync_object
+	validate_nt_sync
+	extract_nt_sync_data
+	create_bible_sync_from_nt
+	signal_bible_from_nt;
+
+Line 1121-1200 Funcs:
+nt_memory_translate:
+	nt_vad_to_bible_vm
+	convert_nt_vad_root
+	translate_nt_memory_section
+	map_nt_working_set
+	remap_nt_ws_swap
+	translate_nt_awe
+	convert_nt_large_pages
+	map_nt_virtual_address_descriptor;
+nt_memory_import:
+	import_nt_vad
+	validate_nt_vad
+	extract_nt_memory_data
+	recreate_bible_vm_from_nt
+	lock_bible_pages_from_nt;
+
+Line 1201-1280 Funcs:
+nt_io_translate:
+	nt_irp_to_bible_io
+	convert_nt_irp_stack
+	translate_nt_io_completion
+	map_nt_file_object
+	remap_nt_device_object
+	translate_nt_driver_object
+	convert_nt_iopb;
+nt_io_import:
+	import_nt_irp
+	validate_nt_io
+	extract_nt_io_data
+	queue_bible_io_from_nt
+	complete_bible_io;
+
+Line 1281-1360 Funcs:
+nt_priority:
+	nt_priority_to_bible_prio
+	convert_nt_dynamic_priority
+	translate_nt_base_priority
+	map_nt_priority_class
+	remap_nt_realtime_priority
+	translate_nt_variable_priority
+	convert_nt_foreground_boost;
+nt_priority_import:
+	import_nt_priority
+	validate_nt_priority
+	extract_nt_prio_data
+	set_bible_priority_from_nt
+	adjust_bible_priority;
+
+Line 1361-1440 Funcs:
+nt_quantum:
+	nt_quantum_to_bible_slice
+	convert_nt_quantum_length
+	translate_nt_quantum_remaining
+	map_nt_quantum_reset
+	remap_nt_quantum_increment
+	translate_nt_quantum_decrement
+	convert_nt_quantum_boost;
+nt_quantum_import:
+	import_nt_quantum
+	validate_nt_quantum
+	extract_nt_quantum_data
+	set_bible_slice_from_nt
+	charge_bible_slice;
+
+Line 1441-1520 Funcs:
+nt_affinity:
+	nt_affinity_to_bible_cpumask
+	convert_nt_system_affinity
+	translate_nt_hard_affinity
+	map_nt_soft_affinity
+	remap_nt_ideal_processor
+	translate_nt_processor_priority;
+nt_affinity_import:
+	import_nt_affinity
+	validate_nt_affinity
+	extract_nt_affinity_data
+	set_bible_cpumask_from_nt
+	migrate_for_affinity;
+
+Line 1521-1600 Funcs:
+nt_token_translate:
+	nt_token_to_bible_cred
+	convert_nt_token_user
+	translate_nt_token_groups
+	map_nt_token_privileges
+	remap_nt_token_owner
+	translate_nt_token_primary_group
+	convert_nt_token_default_dacl
+	map_nt_token_integrity_level;
+nt_token_import:
+	import_nt_token
+	validate_nt_token
+	extract_nt_token_data
+	create_bible_cred_from_token
+	impersonate_bible_thread;
+
+Line 1601-1680 Funcs:
+nt_handle_translate:
+	nt_handle_table_to_bible_fd
+	convert_nt_handle_value
+	translate_nt_handle_attributes
+	map_nt_object_pointer
+	remap_nt_handle_granted_access
+	translate_nt_handle_count;
+nt_handle_import:
+	import_nt_handle_table
+	validate_nt_handle
+	extract_nt_handle_data
+	create_bible_fd_from_nt
+	duplicate_bible_handle;
+
+Line 1681-1760 Funcs:
+nt_ldr_translate:
+	nt_ldr_data_to_bible_loader
+	convert_nt_ldr_module
+	translate_nt_ldr_init_order
+	map_nt_ldr_load_order
+	remap_nt_ldr_memory_order
+	translate_nt_ldr_entry_point;
+nt_ldr_import:
+	import_nt_ldr_data
+	validate_nt_ldr
+	extract_nt_ldr_data
+	load_bible_module_from_nt
+	resolve_bible_imports;
+
+Line 1761-1840 Funcs:
+nt_win32k_translate:
+	nt_win32k_to_bible_gui
+	convert_nt_window_station
+	translate_nt_desktop
+	map_nt_thread_input
+	remap_nt_hook_engine
+	translate_nt_user_handle;
+nt_win32k_import:
+	import_nt_win32k
+	validate_nt_win32k
+	extract_nt_win32k_data
+	setup_bible_gui_from_nt
+	emulate_win32k_in_bible;
+
+Line 1841-1920 Funcs:
+nt_wow64_translate:
+	nt_wow64_to_bible_32bit
+	convert_nt_wow64_context
+	translate_nt_wow64_stack
+	map_nt_wow64_heap
+	remap_nt_wow64_peb
+	translate_nt_wow64_thunk;
+nt_wow64_import:
+	import_nt_wow64
+	validate_nt_wow64
+	extract_nt_wow64_data
+	setup_bible_32bit_env
+	switch_bible_to_32bit;
+
+Line 1921-2000 Funcs:
+nt_dos_memory:
+	dos_memory_to_bible_mem
+	convert_dos_conventional
+	translate_dos_upper_memory
+	map_dos_expanded_memory
+	remap_dos_extended_memory
+	translate_dos_hma
+	convert_dos_umb;
+dos_memory_import:
+	import_dos_memory
+	validate_dos_memory
+	extract_dos_memory_data
+	allocate_bible_memory_for_dos
+	emulate_dos_memory;
+
+Line 2001-2080 Funcs:
+nt_dos_interrupts:
+	dos_int_to_bible_int
+	convert_dos_int_21h
+	translate_dos_int_10h
+	map_dos_int_13h
+	remap_dos_int_15h
+	translate_dos_int_2fh
+	convert_dos_tsr_hooks;
+dos_interrupts_import:
+	import_dos_interrupts
+	validate_dos_ivt
+	extract_dos_int_data
+	setup_bible_int_handlers
+	trap_dos_to_bible;
+
+Line 2081-2160 Funcs:
+nt_win9x_vm:
+	win9x_vm_to_bible_vm
+	convert_win9x_vmm
+	translate_win9x_vxd
+	map_win9x_ring0
+	remap_win9x_ring3
+	translate_win9x_dpm;
+win9x_vm_import:
+	import_win9x_vm
+	validate_win9x_vm
+	extract_win9x_vm_data
+	run_win9x_on_bible
+	emulate_vxd_in_bible;
+
+Line 2161-2240 Funcs:
+nt_batch_translate:
+	batch_translate_processes
+	batch_translate_threads
+	batch_translate_jobs
+	batch_translate_fibers
+	batch_translate_dos
+	batch_translate_tokens
+	batch_translate_handles;
+nt_batch_commit:
+	commit_process_translations
+	commit_thread_translations
+	commit_job_translations
+	commit_fiber_translations
+	commit_dos_translations
+	atomic_nt_transaction;
+
+Line 2241-2320 Funcs:
+nt_state_sync:
+	sync_nt_process_state
+	sync_nt_thread_state
+	sync_nt_job_state
+	sync_nt_fiber_state
+	sync_nt_dos_state
+	sync_nt_apc_state
+	sync_nt_irql_state;
+nt_state_import:
+	import_sync_process_state
+	import_sync_thread_state
+	import_sync_job_state
+	import_sync_fiber_state
+	import_sync_dos_state;
+
+Line 2321-2400 Funcs:
+nt_validate:
+	validate_nt_eprocess_integrity
+	validate_nt_ethread_integrity
+	validate_nt_job_integrity
+	validate_nt_fiber_integrity
+	validate_dos_pcb_integrity
+	validate_nt_token_integrity
+	validate_nt_handle_table;
+nt_verify:
+	verify_process_translation
+	verify_thread_translation
+	verify_job_translation
+	verify_fiber_translation
+	verify_dos_translation
+	verify_token_translation;
+
+Line 2401-2480 Funcs:
+nt_cache:
+	cache_nt_eprocess
+	cache_nt_ethread
+	cache_nt_job_object
+	cache_nt_fiber
+	cache_dos_pcb
+	cache_nt_token
+	cache_nt_handle_table;
+nt_invalidate:
+	invalidate_process_cache
+	invalidate_thread_cache
+	invalidate_job_cache
+	invalidate_fiber_cache
+	invalidate_dos_cache
+	invalidate_token_cache;
+
+Line 2481-2560 Funcs:
+nt_lookup:
+	lookup_nt_process_by_pid
+	lookup_nt_thread_by_tid
+	lookup_nt_job_by_id
+	lookup_nt_fiber_by_id
+	lookup_dos_by_psp
+	lookup_nt_token_by_sid;
+nt_resolve:
+	resolve_bible_to_nt_process
+	resolve_bible_to_nt_thread
+	resolve_bible_work_to_nt_job
+	resolve_bible_activity_to_fiber
+	resolve_bible_multi_to_dos;
+
+Line 2561-2640 Funcs:
+nt_subsystem:
+	nt_csrss_translate
+	nt_smss_translate
+	nt_lsass_translate
+	nt_winlogon_translate
+	nt_services_translate
+	nt_session_manager_translate;
+nt_subsystem_import:
+	import_csrss_subsystem
+	import_smss_subsystem
+	import_lsass_subsystem
+	import_winlogon_subsystem
+	import_service_control;
+
+Line 2641-2720 Funcs:
+nt_debug:
+	nt_debug_translate
+	convert_nt_debug_port
+	translate_nt_debug_event
+	map_nt_debug_buffer
+	remap_nt_debug_object
+	translate_nt_debug_exception;
+nt_debug_import:
+	import_nt_debug
+	validate_nt_debug
+	extract_nt_debug_data
+	setup_bible_debug_for_nt
+	handle_bible_debug_event;
+
+Line 2721-2800 Funcs:
+nt_translation_end:
+	cleanup_nt_translator
+	free_nt_tables
+	unregister_nt_handlers
+	flush_nt_translations
+	nt_translator_shutdown
+	finalize_nt_conversions
+	close_nt_emulation;
+
+end;
+
 proc/task.c:
 Line 1-100 Class:
-task_struct
-task_group_struct
-task_region_struct
-task_mm_struct
-task_signal_struct
-task_stats_struct
-task_debug_struct
-task_attr_struct
-task_quota_struct
-task_security_struct
-task_audit_struct
-task_trace_struct;
+task_struct_in_c
+task_group_struct_in_c
+task_region_struct_in_c
+task_mm_struct_in_c
+task_signal_struct_in_c
+task_stats_struct_in_c
+task_debug_struct_in_c
+task_attr_struct_in_c
+task_quota_struct_in_c
+task_security_struct_in_c
+task_audit_struct_in_c
+task_trace_struct_in_c;
 
 Line 101-200 Funcs:
 task_init:
@@ -3242,566 +3803,5 @@ task_finalize:
 	task_manager_exit
 	task_system_release
 	task_module_cleanup;
-
-end;
-
-proc/sched_nt.c:
-Line 1-80 Class:
-nt_eprocess_struct
-nt_ethread_struct
-nt_kprocess_struct
-nt_kthread_struct
-nt_job_object_struct
-nt_fiber_struct
-nt_tib_struct
-nt_peb_struct
-nt_teb_struct
-nt_dos_pcb_struct;
-
-Line 81-160 Funcs:
-nt_to_bible_init:
-	init_nt_translator
-	init_nt_bible_mapping
-	init_winnt_tables
-	init_win9x_tables
-	init_dos_tables
-	register_nt_handlers
-	init_peb_translator;
-
-Line 161-240 Funcs:
-nt_process_translate:
-	nt_eprocess_to_bible_task
-	nt_kprocess_to_bible_task
-	convert_nt_pid
-	convert_nt_cid
-	translate_nt_peb
-	translate_nt_process_priority
-	map_nt_process_quota
-	remap_nt_process_affinity
-	translate_nt_process_token;
-nt_process_import:
-	import_nt_process
-	validate_nt_eprocess
-	extract_nt_process_data
-	alloc_bible_from_nt_process
-	clone_bible_task_attrs_nt;
-
-Line 241-320 Funcs:
-nt_thread_translate:
-	nt_ethread_to_bible_thread
-	nt_kthread_to_bible_thread
-	convert_nt_tid
-	translate_nt_teb
-	translate_nt_thread_state
-	map_nt_thread_context
-	remap_nt_thread_stack
-	translate_nt_thread_priority
-	convert_nt_base_priority;
-nt_thread_import:
-	import_nt_thread
-	validate_nt_ethread
-	extract_nt_thread_regs
-	extract_nt_thread_fpu
-	alloc_bible_thread_from_nt
-	inherit_nt_thread_attrs;
-
-Line 321-400 Funcs:
-nt_job_translate:
-	nt_job_object_to_bible_work
-	convert_nt_job_id
-	translate_nt_job_name
-	map_nt_job_limits
-	remap_nt_job_basic_limits
-	translate_nt_job_ui_limits
-	convert_nt_job_cpu_rate
-	map_nt_job_io_rate
-	translate_nt_job_memory_limit;
-nt_job_import:
-	import_nt_job_object
-	validate_nt_job
-	extract_nt_job_data
-	alloc_bible_work_from_job
-	set_bible_work_limits
-	attach_processes_to_work;
-
-Line 401-480 Funcs:
-nt_fiber_translate:
-	nt_fiber_to_bible_activity
-	convert_nt_fiber_id
-	translate_nt_fiber_state
-	map_nt_fiber_stack
-	remap_nt_fiber_context
-	translate_nt_fls_data
-	convert_nt_fiber_scheduler
-	map_nt_win9x_fiber
-	translate_nt_fiber_local_storage;
-nt_fiber_import:
-	import_nt_fiber
-	validate_nt_fiber
-	extract_nt_fiber_data
-	alloc_bible_activity_from_fiber
-	switch_to_fiber_mode
-	yield_fiber_activity;
-
-Line 481-560 Funcs:
-nt_dos_translate:
-	dos_pcb_to_bible_multiproc
-	dos_single_to_bible_multi
-	convert_dos_psp
-	translate_dos_environment
-	map_dos_mcb
-	remap_dos_sda
-	translate_dos_dta
-	convert_dos_ivt
-	map_dos_bios_parameters;
-nt_dos_import:
-	import_dos_process
-	validate_dos_pcb
-	extract_dos_process_data
-	create_bible_multiproc_from_dos
-	expand_dos_single_to_multi
-	emulate_dos_in_bible;
-
-Line 561-640 Funcs:
-nt_vdm_translate:
-	nt_vdm_to_bible_vm
-	translate_nt_ntvdm
-	map_dos_box
-	remap_win16_on_win32
-	translate_dos_protected_mode
-	convert_vdm_dos_extender
-	map_vdm_ems_memory
-	translate_vdm_xms_memory;
-nt_vdm_import:
-	import_nt_vdm
-	validate_nt_vdm
-	extract_vdm_data
-	create_dos_environment_in_bible
-	run_dos_app_on_bible;
-
-Line 641-720 Funcs:
-nt_peb_translate:
-	nt_peb_to_bible_proc_info
-	convert_nt_peb_image
-	translate_nt_peb_parameters
-	map_nt_peb_ldr
-	remap_nt_peb_heap
-	translate_nt_peb_process_heaps
-	convert_nt_peb_os_version
-	map_nt_peb_flags;
-nt_peb_import:
-	import_nt_peb
-	validate_nt_peb
-	extract_nt_peb_data
-	setup_bible_image_info
-	create_bible_peb_equivalent;
-
-Line 721-800 Funcs:
-nt_teb_translate:
-	nt_teb_to_bible_thread_info
-	convert_nt_teb_stack
-	translate_nt_teb_tib
-	map_nt_teb_peb
-	remap_nt_teb_last_error
-	translate_nt_teb_current_locale
-	convert_nt_teb_wow32
-	map_nt_teb_exception_list;
-nt_teb_import:
-	import_nt_teb
-	validate_nt_teb
-	extract_nt_teb_data
-	setup_bible_thread_info
-	create_bible_teb_equivalent;
-
-Line 801-880 Funcs:
-nt_apc_translate:
-	nt_apc_to_bible_async
-	convert_nt_user_apc
-	translate_nt_kernel_apc
-	map_nt_special_apc
-	remap_nt_apc_queue
-	translate_nt_apc_state
-	convert_nt_apc_pending;
-nt_apc_import:
-	import_nt_apc
-	validate_nt_apc
-	extract_nt_apc_data
-	setup_bible_async_calls
-	deliver_bible_apc;
-
-Line 881-960 Funcs:
-nt_dpc_translate:
-	nt_dpc_to_bible_dpc
-	convert_nt_dpc_routine
-	translate_nt_dpc_queue
-	map_nt_threaded_dpc
-	remap_nt_dpc_importance
-	translate_nt_dpc_balance;
-nt_dpc_import:
-	import_nt_dpc
-	validate_nt_dpc
-	extract_nt_dpc_data
-	setup_bible_dpc
-	queue_bible_dpc;
-
-Line 961-1040 Funcs:
-nt_irql_translate:
-	nt_irql_to_bible_ipl
-	convert_nt_irql_level
-	translate_nt_irql_raise
-	map_nt_irql_lower
-	remap_nt_passive_level
-	translate_nt_apc_level
-	convert_nt_dispatch_level
-	map_nt_dpc_level;
-nt_irql_import:
-	import_nt_irql
-	validate_nt_irql
-	extract_nt_irql_data
-	set_bible_ipl
-	restore_bible_ipl;
-
-Line 1041-1120 Funcs:
-nt_sync_objects:
-	nt_mutex_to_bible_mutex
-	nt_semaphore_to_bible_sem
-	nt_event_to_bible_event
-	nt_timer_to_bible_timer
-	nt_executive_resource_to_bible
-	nt_fast_mutex_to_bible
-	nt_push_lock_to_bible
-	nt_execute_spinlock_to_bible;
-nt_sync_import:
-	import_nt_sync_object
-	validate_nt_sync
-	extract_nt_sync_data
-	create_bible_sync_from_nt
-	signal_bible_from_nt;
-
-Line 1121-1200 Funcs:
-nt_memory_translate:
-	nt_vad_to_bible_vm
-	convert_nt_vad_root
-	translate_nt_memory_section
-	map_nt_working_set
-	remap_nt_ws_swap
-	translate_nt_awe
-	convert_nt_large_pages
-	map_nt_virtual_address_descriptor;
-nt_memory_import:
-	import_nt_vad
-	validate_nt_vad
-	extract_nt_memory_data
-	recreate_bible_vm_from_nt
-	lock_bible_pages_from_nt;
-
-Line 1201-1280 Funcs:
-nt_io_translate:
-	nt_irp_to_bible_io
-	convert_nt_irp_stack
-	translate_nt_io_completion
-	map_nt_file_object
-	remap_nt_device_object
-	translate_nt_driver_object
-	convert_nt_iopb;
-nt_io_import:
-	import_nt_irp
-	validate_nt_io
-	extract_nt_io_data
-	queue_bible_io_from_nt
-	complete_bible_io;
-
-Line 1281-1360 Funcs:
-nt_priority:
-	nt_priority_to_bible_prio
-	convert_nt_dynamic_priority
-	translate_nt_base_priority
-	map_nt_priority_class
-	remap_nt_realtime_priority
-	translate_nt_variable_priority
-	convert_nt_foreground_boost;
-nt_priority_import:
-	import_nt_priority
-	validate_nt_priority
-	extract_nt_prio_data
-	set_bible_priority_from_nt
-	adjust_bible_priority;
-
-Line 1361-1440 Funcs:
-nt_quantum:
-	nt_quantum_to_bible_slice
-	convert_nt_quantum_length
-	translate_nt_quantum_remaining
-	map_nt_quantum_reset
-	remap_nt_quantum_increment
-	translate_nt_quantum_decrement
-	convert_nt_quantum_boost;
-nt_quantum_import:
-	import_nt_quantum
-	validate_nt_quantum
-	extract_nt_quantum_data
-	set_bible_slice_from_nt
-	charge_bible_slice;
-
-Line 1441-1520 Funcs:
-nt_affinity:
-	nt_affinity_to_bible_cpumask
-	convert_nt_system_affinity
-	translate_nt_hard_affinity
-	map_nt_soft_affinity
-	remap_nt_ideal_processor
-	translate_nt_processor_priority;
-nt_affinity_import:
-	import_nt_affinity
-	validate_nt_affinity
-	extract_nt_affinity_data
-	set_bible_cpumask_from_nt
-	migrate_for_affinity;
-
-Line 1521-1600 Funcs:
-nt_token_translate:
-	nt_token_to_bible_cred
-	convert_nt_token_user
-	translate_nt_token_groups
-	map_nt_token_privileges
-	remap_nt_token_owner
-	translate_nt_token_primary_group
-	convert_nt_token_default_dacl
-	map_nt_token_integrity_level;
-nt_token_import:
-	import_nt_token
-	validate_nt_token
-	extract_nt_token_data
-	create_bible_cred_from_token
-	impersonate_bible_thread;
-
-Line 1601-1680 Funcs:
-nt_handle_translate:
-	nt_handle_table_to_bible_fd
-	convert_nt_handle_value
-	translate_nt_handle_attributes
-	map_nt_object_pointer
-	remap_nt_handle_granted_access
-	translate_nt_handle_count;
-nt_handle_import:
-	import_nt_handle_table
-	validate_nt_handle
-	extract_nt_handle_data
-	create_bible_fd_from_nt
-	duplicate_bible_handle;
-
-Line 1681-1760 Funcs:
-nt_ldr_translate:
-	nt_ldr_data_to_bible_loader
-	convert_nt_ldr_module
-	translate_nt_ldr_init_order
-	map_nt_ldr_load_order
-	remap_nt_ldr_memory_order
-	translate_nt_ldr_entry_point;
-nt_ldr_import:
-	import_nt_ldr_data
-	validate_nt_ldr
-	extract_nt_ldr_data
-	load_bible_module_from_nt
-	resolve_bible_imports;
-
-Line 1761-1840 Funcs:
-nt_win32k_translate:
-	nt_win32k_to_bible_gui
-	convert_nt_window_station
-	translate_nt_desktop
-	map_nt_thread_input
-	remap_nt_hook_engine
-	translate_nt_user_handle;
-nt_win32k_import:
-	import_nt_win32k
-	validate_nt_win32k
-	extract_nt_win32k_data
-	setup_bible_gui_from_nt
-	emulate_win32k_in_bible;
-
-Line 1841-1920 Funcs:
-nt_wow64_translate:
-	nt_wow64_to_bible_32bit
-	convert_nt_wow64_context
-	translate_nt_wow64_stack
-	map_nt_wow64_heap
-	remap_nt_wow64_peb
-	translate_nt_wow64_thunk;
-nt_wow64_import:
-	import_nt_wow64
-	validate_nt_wow64
-	extract_nt_wow64_data
-	setup_bible_32bit_env
-	switch_bible_to_32bit;
-
-Line 1921-2000 Funcs:
-nt_dos_memory:
-	dos_memory_to_bible_mem
-	convert_dos_conventional
-	translate_dos_upper_memory
-	map_dos_expanded_memory
-	remap_dos_extended_memory
-	translate_dos_hma
-	convert_dos_umb;
-dos_memory_import:
-	import_dos_memory
-	validate_dos_memory
-	extract_dos_memory_data
-	allocate_bible_memory_for_dos
-	emulate_dos_memory;
-
-Line 2001-2080 Funcs:
-nt_dos_interrupts:
-	dos_int_to_bible_int
-	convert_dos_int_21h
-	translate_dos_int_10h
-	map_dos_int_13h
-	remap_dos_int_15h
-	translate_dos_int_2fh
-	convert_dos_tsr_hooks;
-dos_interrupts_import:
-	import_dos_interrupts
-	validate_dos_ivt
-	extract_dos_int_data
-	setup_bible_int_handlers
-	trap_dos_to_bible;
-
-Line 2081-2160 Funcs:
-nt_win9x_vm:
-	win9x_vm_to_bible_vm
-	convert_win9x_vmm
-	translate_win9x_vxd
-	map_win9x_ring0
-	remap_win9x_ring3
-	translate_win9x_dpm;
-win9x_vm_import:
-	import_win9x_vm
-	validate_win9x_vm
-	extract_win9x_vm_data
-	run_win9x_on_bible
-	emulate_vxd_in_bible;
-
-Line 2161-2240 Funcs:
-nt_batch_translate:
-	batch_translate_processes
-	batch_translate_threads
-	batch_translate_jobs
-	batch_translate_fibers
-	batch_translate_dos
-	batch_translate_tokens
-	batch_translate_handles;
-nt_batch_commit:
-	commit_process_translations
-	commit_thread_translations
-	commit_job_translations
-	commit_fiber_translations
-	commit_dos_translations
-	atomic_nt_transaction;
-
-Line 2241-2320 Funcs:
-nt_state_sync:
-	sync_nt_process_state
-	sync_nt_thread_state
-	sync_nt_job_state
-	sync_nt_fiber_state
-	sync_nt_dos_state
-	sync_nt_apc_state
-	sync_nt_irql_state;
-nt_state_import:
-	import_sync_process_state
-	import_sync_thread_state
-	import_sync_job_state
-	import_sync_fiber_state
-	import_sync_dos_state;
-
-Line 2321-2400 Funcs:
-nt_validate:
-	validate_nt_eprocess_integrity
-	validate_nt_ethread_integrity
-	validate_nt_job_integrity
-	validate_nt_fiber_integrity
-	validate_dos_pcb_integrity
-	validate_nt_token_integrity
-	validate_nt_handle_table;
-nt_verify:
-	verify_process_translation
-	verify_thread_translation
-	verify_job_translation
-	verify_fiber_translation
-	verify_dos_translation
-	verify_token_translation;
-
-Line 2401-2480 Funcs:
-nt_cache:
-	cache_nt_eprocess
-	cache_nt_ethread
-	cache_nt_job_object
-	cache_nt_fiber
-	cache_dos_pcb
-	cache_nt_token
-	cache_nt_handle_table;
-nt_invalidate:
-	invalidate_process_cache
-	invalidate_thread_cache
-	invalidate_job_cache
-	invalidate_fiber_cache
-	invalidate_dos_cache
-	invalidate_token_cache;
-
-Line 2481-2560 Funcs:
-nt_lookup:
-	lookup_nt_process_by_pid
-	lookup_nt_thread_by_tid
-	lookup_nt_job_by_id
-	lookup_nt_fiber_by_id
-	lookup_dos_by_psp
-	lookup_nt_token_by_sid;
-nt_resolve:
-	resolve_bible_to_nt_process
-	resolve_bible_to_nt_thread
-	resolve_bible_work_to_nt_job
-	resolve_bible_activity_to_fiber
-	resolve_bible_multi_to_dos;
-
-Line 2561-2640 Funcs:
-nt_subsystem:
-	nt_csrss_translate
-	nt_smss_translate
-	nt_lsass_translate
-	nt_winlogon_translate
-	nt_services_translate
-	nt_session_manager_translate;
-nt_subsystem_import:
-	import_csrss_subsystem
-	import_smss_subsystem
-	import_lsass_subsystem
-	import_winlogon_subsystem
-	import_service_control;
-
-Line 2641-2720 Funcs:
-nt_debug:
-	nt_debug_translate
-	convert_nt_debug_port
-	translate_nt_debug_event
-	map_nt_debug_buffer
-	remap_nt_debug_object
-	translate_nt_debug_exception;
-nt_debug_import:
-	import_nt_debug
-	validate_nt_debug
-	extract_nt_debug_data
-	setup_bible_debug_for_nt
-	handle_bible_debug_event;
-
-Line 2721-2800 Funcs:
-nt_translation_end:
-	cleanup_nt_translator
-	free_nt_tables
-	unregister_nt_handlers
-	flush_nt_translations
-	nt_translator_shutdown
-	finalize_nt_conversions
-	close_nt_emulation;
 
 end;
