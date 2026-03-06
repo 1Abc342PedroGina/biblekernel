@@ -103,6 +103,11 @@ typedef BK_REGISTER_HANDLE BK_BOOLEAN;
  * Estruturas de dados para gerenciamento de memória virtual
  */
 
+typedef struct __bk_refcount {
+    BK_UINT32   rc_count;    /* Valor do contador */
+    BK_SPINLOCK rc_lock;     /* Lock para proteção do contador */
+} BK_REFCOUNT;
+
 struct __bk_vm_page {
     BK_UINT64       p_pfn;          /* Número da página física */
     BK_REFCOUNT     p_refcnt;       /* Contador de referências */
@@ -288,3 +293,4 @@ BK_I32 bk_vm_page_fault_handler(BK_VM_OFFSET addr, BK_UINT32 fault_type,
 
 
 #endif /* !_BIBLE_VM_H_ */
+
