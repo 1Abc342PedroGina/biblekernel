@@ -35,8 +35,8 @@ make .conf.kern
 The question will be: Which parts will be in ring 0, and which in ring 3? The parts within src/base/../, src/kfirmware, src/boot, src/abi, and src/api must be in ring 0. For usr/../, the user decides whether it's ring 3 or ring 0; in this context, usr doesn't stand for Unix System Resource but is an abbreviation for User.
 
 Example output:
-X=r0
-A=r3...
+IOFS=r0
+NTFS_Drv=r3...
 
 ## The CFLAGS (-D) instructions for the C preprocessor to set a macro (a constant or compilation flag) even before the code is compiled are:
 -D_BK_KERNEL
