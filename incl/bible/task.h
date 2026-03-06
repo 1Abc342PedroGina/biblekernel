@@ -8,8 +8,41 @@
 #include <bible/vm.h>
 #include <bible/pmap.h>
 
+
+/* Semáforo */
+typedef struct __bk_semaphore {
+    _INT_            sem_count;      /* Valor atual do semáforo */
+    _INT_             sem_max;        /* Valor máximo */
+    BK_SPINLOCK     sem_lock;       /* Lock interno */
+    void            *sem_waiters;   /* Fila de threads esperando */
+} BK_SEMAPHORE;
+
+/* Mutex */
+typedef struct __bk_mutex {
+    BK_UINT32       mutex_owner;    /* Thread ID do proprietário */
+    _INT_             mutex_count;    /* Contador de locks aninhados */
+    BK_SPINLOCK     mutex_lock;     /* Lock interno */
+    void            *mutex_waiters; /* Fila de threads esperando */
+} BK_MUTEX;
+
+/* Variável de condição */
+typedef struct __bk_condvar {
+    BK_SPINLOCK     cond_lock;      /* Lock interno */
+    void            *cond_waiters;  /* Fila de threads esperando */
+} BK_CONDVAR;
+
+/* Signal set */
+typedef BK_UINT32   BK_SIGSET;
+
+/* Ação de sinal */
+struct __bk_sigaction {
+    void    (*sa_handler)(int);              /* Handler do sinal */
+    BK_SIGSET   sa_mask;                      /* Máscara durante handler */
+    _INT_         sa_flags;                      /* Flags */
+};
+
 /*
- * SPDX-License-Identifier: MIT License
+ * SPDX-License-Identifier: MIT
  *
  * Copyright (c) 2024 Bible System Developers
  * Todos os direitos reservados.
@@ -241,6 +274,7 @@ struct __bk_thread {
 
 typedef struct __bk_thread BK_THREAD;
 
+
 /* Lista de threads */
 BK_LIST_HEAD(__bk_thread_list, __bk_thread);
 typedef struct __bk_thread_list BK_THREAD_LIST;
@@ -388,6 +422,9 @@ struct __bk_process {
 	BK_VM_OFFSET	proc_stack_start;	/* Início da stack */
 	BK_VM_OFFSET	proc_stack_end;		/* Fim da stack */
 	
+        struct __bk_process_list {
+    struct __bk_process *plh_first;
+    };
 	/* Recursos do sistema */
 	struct __bk_proc_resources {
 		BK_RLIM		pr_cputime;	/* Limite de tempo de CPU */
@@ -445,7 +482,7 @@ struct __bk_process {
 	
 	/* Relacionamento pai-filho */
 	struct __bk_process	*proc_parent;		/* Processo pai */
-	BK_PROCESS_LIST		proc_children;		/* Processos filhos */
+	struct __bk_process_list		proc_children;		/* Processos filhos */
 	BK_UI32			proc_child_count;	/* Número de filhos */
 	
 	/* Sincronização */
@@ -483,8 +520,6 @@ struct __bk_process {
 
 typedef struct __bk_process BK_PROCESS;
 
-/* Lista de processos */
-BK_LIST_HEAD(__bk_process_list, __bk_process);
 typedef struct __bk_process_list BK_PROCESS_LIST;
 
 /*
@@ -610,6 +645,4 @@ void bk_task_dump_activity(BK_ACTIVITY *activity);
 void bk_task_dump_system_stats(void);
 #endif
 
-
 #endif /* !_BIBLE_TASK_H_ */
-
