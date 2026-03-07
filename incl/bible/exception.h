@@ -1,6 +1,6 @@
 #ifndef _BIBLE_EXCEPTION_H_
 #define _BIBLE_EXCEPTION_H_
-
+ 
 /*
  * exception.h - Sistema de Exceções e Tratamento de Erros do BibleKernel
  * 
@@ -531,3 +531,4 @@ extern BK_EXCEPTION_HANDLER bk_exception_signal_handler;
 #define BK_EXCEPTION_IMMEDIATE_TIMEOUT	0
 
 #endif /* !_BIBLE_EXCEPTION_H_ */
+
