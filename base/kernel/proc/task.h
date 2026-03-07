@@ -1,8 +1,5 @@
-/*
- * Bible Task - Ambiente de execução para threads
- * Inspirada na struct task do XNU
- */
-
+# ifndef PROC_TASK_H
+# define PROC_TASK_H
 
 # include <bible/task.h>
 # include <bible/vm.h>
@@ -535,6 +532,8 @@ struct __bk_task_global_stats {
     (((task)->task_proc_flags & BK_TASK_PROC_FLAG_DID_EXEC) != 0)
 #define BK_TASK_IS_EXEC_COPY(task) \
     (((task)->task_proc_flags & BK_TASK_PROC_FLAG_EXEC_COPY) != 0)
+
+#endif /* PROC_TASK_H */
 
 #define BK_TASK_IS_ACTIVE(task)        ((task)->task_active)
 #define BK_TASK_IS_FROZEN(task)         ((task)->task_frozen)
