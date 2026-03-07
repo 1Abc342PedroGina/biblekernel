@@ -579,3 +579,5 @@ struct __bk_thread_stats {
 
 #define BK_THREAD_PRIO(thr)            ((thr)->thr_priority)
 #define BK_THREAD_STATIC_PRIO(thr)     ((thr)->thr_static_priority)
+
+#endif
