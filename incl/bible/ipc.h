@@ -3,9 +3,240 @@
 
 #include <bible/cdefs.h>
 #include <bible/types.h>
+#include <bible/ktypes.h>
 #include <bible/queue.h>
+#include <bible/kernl_object.h>
+#include <bible/vm.h>
+#include <bible/pmap.h>
+#include <bible/regsister.h>
 #include <bible/task.h>
 
+/* Código de retorno para operações bem-sucedidas */
+#define BK_SUCCESS          0
+/* Código de erro para mensagem muito grande em operações IPC */
+#define BK_IPC_EMSGSIZE     40  /* Tamanho da mensagem excede o limite */
+/* Tamanho máximo permitido para mensagens IPC */
+#define BK_IPC_MAX_MSG_SIZE     65536  /* 64 KB */
+/* Código de erro para argumento inválido em operações IPC */
+#define BK_IPC_EINVAL       22  /* Argumento inválido */
+
+typedef struct __bk_hashtable {
+    BK_UINT32   ht_size;        /* Número de buckets */
+    BK_UINT32   ht_count;       /* Número de elementos */
+    BK_LIST_HEAD(, __bk_hash_entry) *ht_buckets;  /* Array de buckets */
+    BK_SPINLOCK ht_lock;        /* Lock para concorrência */
+} BK_HASHTABLE;
+
+/*
+ * Entrada da tabela hash
+ */
+struct __bk_hash_entry {
+    BK_UINT64       he_key;     /* Chave */
+    void            *he_value;  /* Valor associado */
+    BK_LIST_ENTRY(__bk_hash_entry) he_link;  /* Link na lista do bucket */
+};
+
+typedef struct __bk_hash_entry BK_HASH_ENTRY;
+
+
+typedef struct __bk_ipc_entry_list BK_IPC_ENTRY_LIST;
+/*
+ * Sistema de Eventos do Kernel
+ */
+
+/* Tipos de evento */
+typedef enum {
+    BK_EVENT_TYPE_NONE         = 0,  /* Tipo inválido */
+    BK_EVENT_TYPE_SIGNAL       = 1,  /* Sinal */
+    BK_EVENT_TYPE_TIMER        = 2,  /* Timer expirado */
+    BK_EVENT_TYPE_IPC          = 3,  /* Mensagem IPC recebida */
+    BK_EVENT_TYPE_IO           = 4,  /* Operação de I/O completada */
+    BK_EVENT_TYPE_PROCESS      = 5,  /* Evento de processo (fork, exec, exit) */
+    BK_EVENT_TYPE_THREAD       = 6,  /* Evento de thread */
+    BK_EVENT_TYPE_USER         = 7,  /* Evento definido pelo usuário */
+} BK_EVENT_TYPE;
+
+/* Estados de um evento */
+typedef enum {
+    BK_EVENT_PENDING    = 0,  /* Evento pendente */
+    BK_EVENT_SENT       = 1,  /* Evento enviado */
+    BK_EVENT_RECEIVED   = 2,  /* Evento recebido */
+    BK_EVENT_PROCESSED  = 3,  /* Evento processado */
+    BK_EVENT_CANCELLED  = 4,  /* Evento cancelado */
+    BK_EVENT_TIMEDOUT   = 5,  /* Evento expirou */
+} BK_EVENT_STATE;
+
+/* Prioridades de evento */
+#define BK_EVENT_PRIORITY_LOW       0
+#define BK_EVENT_PRIORITY_NORMAL    1
+#define BK_EVENT_PRIORITY_HIGH      2
+#define BK_EVENT_PRIORITY_CRITICAL  3
+
+/*
+ * Estrutura principal de evento
+ */
+struct __bk_event {
+    BK_ID           ev_id;              /* ID único do evento */
+    BK_EVENT_TYPE   ev_type;            /* Tipo do evento */
+    BK_EVENT_STATE  ev_state;           /* Estado atual */
+    BK_UINT8        ev_priority;        /* Prioridade */
+    
+    /* Origem e destino */
+    BK_ID           ev_source;          /* Objeto de origem */
+    BK_ID           ev_target;          /* Objeto de destino */
+    
+    /* Dados do evento */
+    union {
+        struct {
+            BK_I32  sig_num;            /* Número do sinal */
+        } signal;
+        
+        struct {
+            BK_ID   timer_id;            /* ID do timer */
+            BK_TIME expiry_time;         /* Tempo de expiração */
+        } timer;
+        
+        struct {
+            BK_ID   msg_id;              /* ID da mensagem */
+            BK_SIZE msg_size;             /* Tamanho da mensagem */
+            void    *msg_data;           /* Dados da mensagem */
+        } ipc;
+        
+        struct {
+            BK_I32  fd;                   /* File descriptor */
+            BK_I32  result;               /* Resultado da operação */
+        } io;
+        
+        struct {
+            BK_PID  pid;                  /* PID do processo */
+            BK_I32  status;                /* Status do processo */
+        } process;
+        
+        struct {
+            BK_LWPID tid;                  /* Thread ID */
+        } thread;
+        
+        struct {
+            BK_UINT32 user_data1;          /* Dados definidos pelo usuário */
+            BK_UINT32 user_data2;
+            void    *user_ptr;
+        } user;
+    } ev_data;
+    
+    /* Temporização */
+    BK_TIME         ev_creation_time;   /* Tempo de criação */
+    BK_TIME         ev_expiry_time;      /* Tempo de expiração (0 = sem expiração) */
+    BK_TIME         ev_delivery_time;    /* Tempo de entrega */
+    
+    /* Controle */
+    BK_UINT32       ev_flags;
+#define BK_EVENT_FLAG_SYSTEM        0x0001  /* Evento do sistema */
+#define BK_EVENT_FLAG_USER          0x0002  /* Evento do usuário */
+#define BK_EVENT_FLAG_BROADCAST     0x0004  /* Evento broadcast */
+#define BK_EVENT_FLAG_PRIVATE       0x0008  /* Evento privado */
+#define BK_EVENT_FLAG_PERSISTENT    0x0010  /* Evento persistente */
+    
+    /* Callbacks */
+    void            (*ev_handler)(struct __bk_event *ev, void *context);
+    void            *ev_handler_context;
+    void            (*ev_cleanup)(struct __bk_event *ev);
+    
+    /* Listas */
+    BK_LIST_ENTRY(__bk_event) ev_list_link;      /* Link em listas gerais */
+    BK_LIST_ENTRY(__bk_event) ev_queue_link;     /* Link em filas de evento */
+    BK_TAILQ_ENTRY(__bk_event) ev_target_link;   /* Link no objeto alvo */
+    
+    /* Sincronização */
+    BK_SPINLOCK     ev_lock;
+    BK_SEMAPHORE    ev_completion_sem;
+    
+    /* Resultado */
+    BK_I32          ev_result;
+    BK_I32          ev_error;
+};
+
+typedef struct __bk_event BK_EVENT;
+
+/* Listas de eventos */
+BK_LIST_HEAD(__bk_event_list, __bk_event);
+typedef struct __bk_event_list BK_EVENT_LIST;
+
+BK_TAILQ_HEAD(__bk_event_queue, __bk_event);
+typedef struct __bk_event_queue BK_EVENT_QUEUE;
+
+/*
+ * Funções para manipulação de eventos
+ */
+
+/* Criação/destruição */
+BK_EVENT *bk_event_create(BK_EVENT_TYPE type, BK_UINT8 priority);
+void bk_event_destroy(BK_EVENT *ev);
+BK_I32 bk_event_init(BK_EVENT *ev, BK_EVENT_TYPE type, BK_UINT8 priority);
+void bk_event_fini(BK_EVENT *ev);
+
+/* Envio e recebimento */
+BK_I32 bk_event_send(BK_EVENT *ev, BK_ID target, BK_UINT32 flags);
+BK_I32 bk_event_send_sync(BK_EVENT *ev, BK_ID target, BK_TIME timeout);
+BK_EVENT *bk_event_receive(BK_ID source, BK_EVENT_TYPE type, BK_TIME timeout);
+BK_I32 bk_event_receive_into(BK_EVENT *ev, BK_ID source, BK_EVENT_TYPE type, BK_TIME timeout);
+
+/* Cancelamento e timeout */
+BK_I32 bk_event_cancel(BK_EVENT *ev);
+BK_I32 bk_event_set_timeout(BK_EVENT *ev, BK_TIME timeout);
+BK_I32 bk_event_clear_timeout(BK_EVENT *ev);
+
+/* Status e informações */
+BK_EVENT_STATE bk_event_get_state(BK_EVENT *ev);
+BK_ID bk_event_get_id(BK_EVENT *ev);
+BK_EVENT_TYPE bk_event_get_type(BK_EVENT *ev);
+BK_I32 bk_event_get_result(BK_EVENT *ev);
+BK_I32 bk_event_get_error(BK_EVENT *ev);
+
+/* Callbacks */
+void bk_event_set_handler(BK_EVENT *ev, void (*handler)(BK_EVENT *, void *), void *context);
+void bk_event_set_cleanup(BK_EVENT *ev, void (*cleanup)(BK_EVENT *));
+
+/* Espera por eventos */
+BK_I32 bk_event_wait(BK_EVENT *ev, BK_TIME timeout);
+BK_I32 bk_event_wait_any(BK_EVENT **ev, BK_UINT32 count, BK_TIME timeout);
+
+/* Macros úteis */
+#define BK_EVENT_IS_PENDING(ev)     ((ev)->ev_state == BK_EVENT_PENDING)
+#define BK_EVENT_IS_SENT(ev)        ((ev)->ev_state == BK_EVENT_SENT)
+#define BK_EVENT_IS_RECEIVED(ev)    ((ev)->ev_state == BK_EVENT_RECEIVED)
+#define BK_EVENT_IS_PROCESSED(ev)   ((ev)->ev_state == BK_EVENT_PROCESSED)
+#define BK_EVENT_IS_CANCELLED(ev)   ((ev)->ev_state == BK_EVENT_CANCELLED)
+#define BK_EVENT_HAS_TIMEDOUT(ev)   ((ev)->ev_state == BK_EVENT_TIMEDOUT)
+
+#define BK_EVENT_SET_DATA(ev, type, field, value) \
+    do { (ev)->ev_data.type.field = (value); } while(0)
+
+#define BK_EVENT_GET_DATA(ev, type, field) \
+    ((ev)->ev_data.type.field)
+
+/*
+ * Eventos predefinidos do sistema
+ */
+extern BK_EVENT *bk_event_null;        /* Evento nulo */
+extern BK_EVENT *bk_event_quit;        /* Evento de saída */
+extern BK_EVENT *bk_event_interrupt;   /* Evento de interrupção */
+
+/*
+ * Inicialização do sistema de eventos
+ */
+BK_I32 bk_event_system_init(void);
+void bk_event_system_shutdown(void);
+
+/*
+ * Funções para manipulação da hashtable (declarações)
+ */
+BK_HASHTABLE *bk_hashtable_create(BK_UINT32 size);
+void bk_hashtable_destroy(BK_HASHTABLE *ht);
+BK_I32 bk_hashtable_insert(BK_HASHTABLE *ht, BK_UINT64 key, void *value);
+void *bk_hashtable_lookup(BK_HASHTABLE *ht, BK_UINT64 key);
+BK_I32 bk_hashtable_remove(BK_HASHTABLE *ht, BK_UINT64 key);
+void bk_hashtable_clear(BK_HASHTABLE *ht);
+BK_UINT32 bk_hashtable_count(BK_HASHTABLE *ht);
 
 /*
  * Modelos de kernel suportados
@@ -206,6 +437,369 @@ struct __bk_ipc_mailbox {
 };
 
 typedef struct __bk_ipc_mailbox BK_IPC_MAILBOX;
+
+/*
+ * Sistema de Pipes do Kernel
+ */
+
+/* Direções do pipe */
+typedef enum {
+    BK_PIPE_READ        = 0x01,    /* Extremidade de leitura */
+    BK_PIPE_WRITE       = 0x02,    /* Extremidade de escrita */
+    BK_PIPE_BOTH        = 0x03,    /* Ambas extremidades */
+} BK_PIPE_DIR;
+
+/* Flags de criação do pipe */
+#define BK_PIPE_FLAG_NONBLOCK   0x0001  /* Operações não bloqueantes */
+#define BK_PIPE_FLAG_DIRECT      0x0002  /* Pipe direto (sem buffer) */
+#define BK_PIPE_FLAG_SYSTEM      0x0004  /* Pipe do sistema */
+#define BK_PIPE_FLAG_USER        0x0008  /* Pipe do usuário */
+
+/* Flags de operação do pipe */
+#define BK_PIPE_O_NONBLOCK   0x0001  /* Não bloqueante */
+#define BK_PIPE_O_SYNC       0x0002  /* Escrita síncrona */
+#define BK_PIPE_O_ASYNC      0x0004  /* Escrita assíncrona */
+
+/* Estados do pipe */
+typedef enum {
+    BK_PIPE_STATE_OPEN      = 0,    /* Pipe aberto */
+    BK_PIPE_STATE_CLOSED    = 1,    /* Pipe fechado */
+    BK_PIPE_STATE_BROKEN    = 2,    /* Pipe quebrado (sem leitores/escritores) */
+    BK_PIPE_STATE_ERROR     = 3,    /* Estado de erro */
+} BK_PIPE_STATE;
+
+/*
+ * Estrutura principal do pipe
+ */
+struct __bk_pipe {
+    BK_ID           pipe_id;            /* ID único do pipe */
+    BK_PIPE_STATE   pipe_state;         /* Estado atual */
+    BK_UINT32       pipe_flags;         /* Flags de criação */
+    BK_SIZE         pipe_buffer_size;    /* Tamanho do buffer */
+    BK_SIZE         pipe_buffer_used;    /* Espaço usado no buffer */
+    
+    /* Buffer circular */
+    BK_UINT8        *pipe_buffer;        /* Buffer de dados */
+    BK_SIZE         pipe_read_pos;       /* Posição de leitura */
+    BK_SIZE         pipe_write_pos;      /* Posição de escrita */
+    
+    /* Extremidades */
+    BK_ID           pipe_read_fd;        /* File descriptor de leitura */
+    BK_ID           pipe_write_fd;       /* File descriptor de escrita */
+    
+    /* Leitores e escritores */
+    BK_UINT32       pipe_readers;        /* Número de leitores */
+    BK_UINT32       pipe_writers;        /* Número de escritores */
+    
+    /* Processo proprietário */
+    BK_PID          pipe_owner_pid;      /* PID do processo dono */
+    
+    /* Listas */
+    BK_LIST_ENTRY(__bk_pipe) pipe_list_link;    /* Link na lista global */
+    
+    /* Sincronização */
+    BK_SPINLOCK     pipe_lock;            /* Lock principal */
+    BK_SEMAPHORE    pipe_read_sem;        /* Semáforo para leitura */
+    BK_SEMAPHORE    pipe_write_sem;       /* Semáforo para escrita */
+    BK_MUTEX        pipe_mutex;           /* Mutex para acesso ao buffer */
+    BK_CONDVAR      pipe_read_cond;       /* Condição para leitura */
+    BK_CONDVAR      pipe_write_cond;      /* Condição para escrita */
+    
+    /* Eventos */
+    BK_EVENT        *pipe_read_event;      /* Evento de leitura disponível */
+    BK_EVENT        *pipe_write_event;     /* Evento de escrita disponível */
+    BK_EVENT        *pipe_hangup_event;    /* Evento de hangup */
+    
+    /* Estatísticas */
+    BK_UINT64       pipe_bytes_read;       /* Total de bytes lidos */
+    BK_UINT64       pipe_bytes_written;    /* Total de bytes escritos */
+    BK_UINT32       pipe_read_ops;         /* Número de operações de leitura */
+    BK_UINT32       pipe_write_ops;        /* Número de operações de escrita */
+    BK_UINT32       pipe_read_blocked;     /* Leitores bloqueados */
+    BK_UINT32       pipe_write_blocked;    /* Escritores bloqueados */
+    
+    /* Timeout */
+    BK_TIME         pipe_read_timeout;     /* Timeout para leitura */
+    BK_TIME         pipe_write_timeout;    /* Timeout para escrita */
+    
+    /* Dados do usuário */
+    void            *pipe_private;         /* Dados privados */
+};
+
+typedef struct __bk_pipe BK_PIPE;
+
+/* Lista de pipes */
+BK_LIST_HEAD(__bk_pipe_list, __bk_pipe);
+typedef struct __bk_pipe_list BK_PIPE_LIST;
+
+/*
+ * Funções para criação e destruição
+ */
+
+/* Cria um novo pipe */
+BK_I32 bk_pipe_create(BK_PIPE **pipe, BK_UINT32 flags, BK_SIZE buffer_size);
+
+/* Cria um pipe com descritores de arquivo */
+BK_I32 bk_pipe_open(BK_ID *read_fd, BK_ID *write_fd, BK_UINT32 flags);
+
+/* Fecha uma extremidade do pipe */
+BK_I32 bk_pipe_close(BK_PIPE *pipe, BK_PIPE_DIR dir);
+
+/* Fecha o pipe completamente */
+BK_I32 bk_pipe_destroy(BK_PIPE *pipe);
+
+/*
+ * Operações de leitura e escrita
+ */
+
+/* Lê dados do pipe */
+BK_SSIZE bk_pipe_read(BK_PIPE *pipe, void *buffer, BK_SIZE size, BK_UINT32 flags);
+
+/* Lê dados do pipe com timeout */
+BK_SSIZE bk_pipe_read_timeout(BK_PIPE *pipe, void *buffer, BK_SIZE size, BK_TIME timeout);
+
+/* Escreve dados no pipe */
+BK_SSIZE bk_pipe_write(BK_PIPE *pipe, const void *buffer, BK_SIZE size, BK_UINT32 flags);
+
+/* Escreve dados no pipe com timeout */
+BK_SSIZE bk_pipe_write_timeout(BK_PIPE *pipe, const void *buffer, BK_SIZE size, BK_TIME timeout);
+
+/* Lê dados sem remover do buffer (peek) */
+BK_SSIZE bk_pipe_peek(BK_PIPE *pipe, void *buffer, BK_SIZE size);
+
+/*
+ * Operações de controle
+ */
+
+/* Configura flags do pipe */
+BK_I32 bk_pipe_set_flags(BK_PIPE *pipe, BK_UINT32 flags);
+
+/* Obtém flags do pipe */
+BK_UINT32 bk_pipe_get_flags(BK_PIPE *pipe);
+
+/* Configura timeouts */
+BK_I32 bk_pipe_set_timeout(BK_PIPE *pipe, BK_TIME read_timeout, BK_TIME write_timeout);
+
+/* Limpa o buffer do pipe */
+BK_I32 bk_pipe_clear(BK_PIPE *pipe);
+
+/* Obtém espaço disponível para leitura */
+BK_SIZE bk_pipe_available_read(BK_PIPE *pipe);
+
+/* Obtém espaço disponível para escrita */
+BK_SIZE bk_pipe_available_write(BK_PIPE *pipe);
+
+/*
+ * Operações de bloqueio
+ */
+
+/* Bloqueia até que dados estejam disponíveis para leitura */
+BK_I32 bk_pipe_wait_read(BK_PIPE *pipe, BK_TIME timeout);
+
+/* Bloqueia até que espaço esteja disponível para escrita */
+BK_I32 bk_pipe_wait_write(BK_PIPE *pipe, BK_TIME timeout);
+
+/*
+ * Informações e estatísticas
+ */
+
+/* Obtém estado do pipe */
+BK_PIPE_STATE bk_pipe_get_state(BK_PIPE *pipe);
+
+/* Obtém ID do pipe */
+BK_ID bk_pipe_get_id(BK_PIPE *pipe);
+
+/* Obtém estatísticas do pipe */
+void bk_pipe_get_stats(BK_PIPE *pipe, struct __bk_pipe_stats *stats);
+
+/* Estrutura de estatísticas do pipe */
+struct __bk_pipe_stats {
+    BK_SIZE         ps_buffer_size;
+    BK_SIZE         ps_buffer_used;
+    BK_UINT32       ps_readers;
+    BK_UINT32       ps_writers;
+    BK_UINT64       ps_bytes_read;
+    BK_UINT64       ps_bytes_written;
+    BK_UINT32       ps_read_ops;
+    BK_UINT32       ps_write_ops;
+    BK_UINT32       ps_read_blocked;
+    BK_UINT32       ps_write_blocked;
+    BK_PIPE_STATE   ps_state;
+};
+
+/*
+ * Funções de gerenciamento do sistema
+ */
+
+/* Inicializa o sistema de pipes */
+BK_I32 bk_pipe_system_init(void);
+
+/* Finaliza o sistema de pipes */
+void bk_pipe_system_shutdown(void);
+
+/* Obtém estatísticas globais do sistema de pipes */
+void bk_pipe_system_get_stats(struct __bk_pipe_system_stats *stats);
+
+/* Estrutura de estatísticas globais */
+struct __bk_pipe_system_stats {
+    BK_UINT32       pss_total_pipes;
+    BK_UINT32       pss_active_pipes;
+    BK_UINT32       pss_closed_pipes;
+    BK_UINT64       pss_total_bytes_read;
+    BK_UINT64       pss_total_bytes_written;
+    BK_UINT32       pss_total_read_ops;
+    BK_UINT32       pss_total_write_ops;
+    BK_SIZE         pss_total_buffer_size;
+    BK_SIZE         pss_total_buffer_used;
+};
+
+/*
+ * Macros úteis
+ */
+#define BK_PIPE_IS_READABLE(pipe)   (bk_pipe_available_read(pipe) > 0)
+#define BK_PIPE_IS_WRITABLE(pipe)   (bk_pipe_available_write(pipe) > 0)
+#define BK_PIPE_IS_OPEN(pipe)       ((pipe)->pipe_state == BK_PIPE_STATE_OPEN)
+#define BK_PIPE_IS_CLOSED(pipe)     ((pipe)->pipe_state == BK_PIPE_STATE_CLOSED)
+#define BK_PIPE_IS_BROKEN(pipe)     ((pipe)->pipe_state == BK_PIPE_STATE_BROKEN)
+
+#define BK_PIPE_HAS_READERS(pipe)   ((pipe)->pipe_readers > 0)
+#define BK_PIPE_HAS_WRITERS(pipe)   ((pipe)->pipe_writers > 0)
+
+/*
+ * Compatibilidade com POSIX
+ */
+#ifndef _BK_NO_COMPAT
+#define pipe(fds)               bk_pipe_open(&(fds)[0], &(fds)[1], 0)
+#define pipe2(fds, flags)       bk_pipe_open(&(fds)[0], &(fds)[1], flags)
+#endif /* !_BK_NO_COMPAT */
+
+/*
+ * Sistema de Filas (Queues) do Kernel
+ */
+
+/* Tipos de fila */
+typedef enum {
+    BK_QUEUE_TYPE_FIFO      = 0,    /* First In, First Out */
+    BK_QUEUE_TYPE_LIFO      = 1,    /* Last In, First Out (pilha) */
+    BK_QUEUE_TYPE_PRIORITY  = 2,    /* Fila de prioridade */
+    BK_QUEUE_TYPE_CIRCULAR  = 3,    /* Fila circular */
+    BK_QUEUE_TYPE_MSG       = 4,    /* Fila de mensagens */
+} BK_QUEUE_TYPE;
+
+/* Modos de operação */
+typedef enum {
+    BK_QUEUE_MODE_BLOCKING  = 0,    /* Operações bloqueantes */
+    BK_QUEUE_MODE_NONBLOCK  = 1,    /* Operações não bloqueantes */
+} BK_QUEUE_MODE;
+
+/* Estados da fila */
+typedef enum {
+    BK_QUEUE_STATE_READY    = 0,    /* Fila pronta para uso */
+    BK_QUEUE_STATE_EMPTY    = 1,    /* Fila vazia */
+    BK_QUEUE_STATE_FULL     = 2,    /* Fila cheia */
+    BK_QUEUE_STATE_CLOSED   = 3,    /* Fila fechada */
+} BK_QUEUE_STATE;
+
+/*
+ * Estrutura de um elemento da fila
+ */
+struct __bk_queue_item {
+    void                    *qi_data;       /* Ponteiro para os dados */
+    BK_SIZE                 qi_size;        /* Tamanho dos dados */
+    BK_UINT32               qi_priority;    /* Prioridade */
+    BK_ID                   qi_sender;      /* ID do remetente */
+    BK_TIME                 qi_timestamp;   /* Timestamp de inserção */
+    
+    /* Próximo elemento na fila */
+    struct __bk_queue_item *qi_next;
+    
+    /* Anterior elemento na fila (para LIFO e filas duplamente encadeadas) */
+    struct __bk_queue_item *qi_prev;
+};
+
+typedef struct __bk_queue_item BK_QUEUE_ITEM;
+
+/*
+ * Estrutura principal da fila
+ */
+struct __bk_queue {
+    BK_ID               q_id;               /* ID único da fila */
+    BK_QUEUE_TYPE       q_type;             /* Tipo da fila */
+    BK_QUEUE_MODE       q_mode;             /* Modo de operação */
+    BK_QUEUE_STATE      q_state;            /* Estado atual */
+    BK_UINT32           q_flags;            /* Flags de criação */
+    
+    /* Capacidade e tamanho */
+    BK_UINT32           q_max_items;        /* Número máximo de itens */
+    BK_UINT32           q_current_items;    /* Número atual de itens */
+    BK_SIZE             q_max_data_size;    /* Tamanho máximo dos dados */
+    BK_SIZE             q_current_data_size; /* Tamanho total dos dados */
+    
+    /* Ponteiros para início e fim da fila */
+    BK_QUEUE_ITEM       *q_head;             /* Primeiro item */
+    BK_QUEUE_ITEM       *q_tail;             /* Último item */
+    
+    /* Processo proprietário */
+    BK_PID              q_owner_pid;        /* PID do processo dono */
+    
+    /* Sincronização */
+    BK_SPINLOCK         q_lock;              /* Lock principal */
+    BK_SEMAPHORE        q_items_sem;         /* Semáforo de itens disponíveis */
+    BK_SEMAPHORE        q_space_sem;         /* Semáforo de espaço disponível */
+    
+    /* Estatísticas */
+    BK_UINT64           q_items_enqueued;    /* Total de itens enfileirados */
+    BK_UINT64           q_items_dequeued;    /* Total de itens desenfileirados */
+    BK_UINT64           q_bytes_enqueued;    /* Total de bytes enfileirados */
+    BK_UINT64           q_bytes_dequeued;    /* Total de bytes desenfileirados */
+    BK_UINT32           q_peak_items;        /* Pico de itens */
+    
+    /* Timeouts */
+    BK_TIME             q_read_timeout;      /* Timeout padrão para leitura */
+    BK_TIME             q_write_timeout;     /* Timeout padrão para escrita */
+    
+    /* Dados do usuário */
+    void               *q_private;           /* Dados privados */
+};
+
+typedef struct __bk_queue BK_QUEUE;
+
+/*
+ * Funções básicas
+ */
+
+/* Cria uma nova fila */
+BK_QUEUE *bk_queue_create(BK_QUEUE_TYPE type, BK_UINT32 max_items, BK_UINT32 flags);
+
+/* Destrói uma fila */
+BK_I32 bk_queue_destroy(BK_QUEUE *q);
+
+/* Enfileira um item */
+BK_I32 bk_queue_enqueue(BK_QUEUE *q, void *data, BK_SIZE size, BK_UINT32 flags);
+
+/* Desenfileira um item */
+BK_I32 bk_queue_dequeue(BK_QUEUE *q, void **data, BK_SIZE *size, BK_UINT32 flags);
+
+/* Verifica se a fila está vazia */
+static __BK_ALWAYS_INLINE BK_BOOLEAN
+bk_queue_is_empty(BK_QUEUE *q)
+{
+    return (q->q_current_items == 0);
+}
+
+/* Verifica se a fila está cheia */
+static __BK_ALWAYS_INLINE BK_BOOLEAN
+bk_queue_is_full(BK_QUEUE *q)
+{
+    return (q->q_current_items >= q->q_max_items);
+}
+
+/* Obtém número de itens na fila */
+static __BK_ALWAYS_INLINE BK_UINT32
+bk_queue_get_count(BK_QUEUE *q)
+{
+    return q->q_current_items;
+}
 
 /* Porta de IPC (para comunicação cliente-servidor) */
 struct __bk_ipc_port {
