@@ -439,6 +439,8 @@ BK_I32 bk_activity_get_error(BK_ACTIVITY *act);
 BK_UINT16 bk_activity_get_state(BK_ACTIVITY *act);
 
 BK_BOOLEAN bk_activity_is_completed(BK_ACTIVITY *act);
+
+# endif /* PROC_ACTIVITY_H */
 BK_BOOLEAN bk_activity_is_running(BK_ACTIVITY *act);
 BK_BOOLEAN bk_activity_is_blocked(BK_ACTIVITY *act);
 
