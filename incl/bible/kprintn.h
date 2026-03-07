@@ -2,6 +2,16 @@
 #define _BIBLE_KPRINTN_H
 
 #include <bible/types.h>
+#include <bible/ktypes.h>
+#include <bible/task.h>
+#include <bible/kernl_object.h>
+#include <bible/ipc.h>
+#include <bible/exception.h>
+#include <bible/interrupt.h>
+#include <bible/bofs.h>
+#include <bible/ctfs.h>
+#include <bible/vm.h>
+#include <bible/pmap.h>
 
 /*
  * KPrintn - Kernel Print Number System
@@ -98,13 +108,17 @@ struct kprintn_msg {
     __BK_UI8 level;                /* Severity level */
     __BK_UI32 error_code;          /* Error code */
     __BK_UI32 flags;               /* Format flags */
-    __BK_UI64 timestamp;           /* Timestamp */
+    BK_UINT64 timestamp;           /* Timestamp */
     __BK_UI32 pid;                 /* Process ID */
     __BK_UI32 cpu_id;              /* CPU ID */
     const char *function;          /* Function name */
     __BK_UI32 line;                /* Line number */
     const char *file;              /* File name */
 };
+
+#ifndef __bible_printf
+#define __bible_printf(x, y) __attribute__((format(printf, x, y)))
+#endif
 
 /* Inicialização do sistema de log */
 int kprintn_init(void);
