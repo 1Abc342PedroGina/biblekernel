@@ -2,6 +2,7 @@
 #define _BIBLE_SYSCALLS_H
 
 #include <bible/ktypes.h>
+#include <bible/regsister.h>
 
 /* --- Process Management & Lifecycle --- */
 #define BIBLE_READ              10000
@@ -70,6 +71,8 @@
  * tambem cria processo Neto
  * Tambem cria Processo Irmão do Pai
  * Tambem cria um Processo Neto do Filho
+ * E Processos consubstanciais, ou seja, que tem a mesma substancias, 
+ * Mas recursos e/ou pessoas diferente
  */
 #define BIBLE_RPROC           10058
 /* Semelhante ao FPROC, mas  mas com a diferença crítica de que o filho compartilha o espaço de
@@ -720,7 +723,7 @@
 #define BIBLE_SYS_MEM_DEBUG          10698
 #define BIBLE_SYS_MEM_LOG            10699
 #define BIBLE_LAST_CALL              10700
-
+#define __biblead2 __attribute__((__noreturn__))
 #define BK_SYSCALL_ERROR_BIT (1ULL << 63)
 
 __BK_BEGIN_DECLS
@@ -759,7 +762,7 @@ BK_QUAD bk_syscall(BK_REGISTER number, ...);
 
 
 /* Gerenciamento de Processos e Fluxo */
-__dead2 void bk_exit(BK_I32 status);
+__biblead2 void bk_exit(BK_I32 status);
 BK_PID       bk_fproc(void);
 BK_PID       bk_getpid(void);
 BK_PID       bk_getppid(void);
@@ -814,10 +817,10 @@ BK_I32       bk_clock_gettime(BK_CLOCKID clock_id, struct timespec *tp);
 
 /* Networking e Sockets */
 BK_I32       bk_socket(BK_I32 domain, BK_I32 type, BK_I32 protocol);
-BK_I32       bk_bind(BK_I32 s, const struct bk_sockaddr *name, BK_SOCKLEN_KT namelen);
+BK_I32       bk_bind(BK_I32 s, const struct bk_sockaddr *name, __SOCKLEN_KT namelen);
 BK_I32       bk_listen(BK_I32 s, BK_I32 backlog);
-BK_I32       bk_accept(BK_I32 s, struct bk_sockaddr *addr, BK_SOCKLEN_KT *addrlen);
-BK_I32       bk_connect(BK_I32 s, const struct bk_sockaddr *name, BK_SOCKLEN_KT namelen);
+BK_I32       bk_accept(BK_I32 s, struct bk_sockaddr *addr, __SOCKLEN_KT *addrlen);
+BK_I32       bk_connect(BK_I32 s, const struct bk_sockaddr *name, __SOCKLEN_KT namelen);
 
 __BK_END_DECLS
 #endif /* _BIBLE_SYSCALLS_H */
