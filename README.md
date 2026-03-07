@@ -100,7 +100,7 @@ to compile only the files in ring 0, and then link them into a single binary cal
 
 ## Build User Driver
 
-If optional and you wish, you can compile the driver and file system software in user mode using 
+If you wish, you can compile the User ES (Input/Output) driver and the filesystem software (other than BibleFS, BOFS, IOFS, CacheFS, HalFS, and TEMPORARYFS) in user mode using
 ```text
 make usr
 ```
