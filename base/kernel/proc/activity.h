@@ -95,7 +95,7 @@
 /*
  * Estrutura principal da atividade
  */
-struct __bk_activity {
+struct activity {
     /*
      * Identificação e estado básico
      */
@@ -136,10 +136,10 @@ struct __bk_activity {
     /*
      * Filas e listas (usando macros do queue.h)
      */
-    BK_LIST_ENTRY(__bk_activity)   act_task_link;    /* Link na task */
-    BK_LIST_ENTRY(__bk_activity)   act_thread_link;  /* Link na thread */
-    BK_TAILQ_ENTRY(__bk_activity)  act_sched_link;   /* Link no escalonador */
-    BK_TAILQ_ENTRY(__bk_activity)  act_wait_link;    /* Link em wait queue */
+    BK_LIST_ENTRY(activity)   act_task_link;    /* Link na task */
+    BK_LIST_ENTRY(activity)   act_thread_link;  /* Link na thread */
+    BK_TAILQ_ENTRY(activity)  act_sched_link;   /* Link no escalonador */
+    BK_TAILQ_ENTRY(activity)  act_wait_link;    /* Link em wait queue */
     
     /*
      * Wait queue e bloqueio
@@ -206,7 +206,7 @@ struct __bk_activity {
     /*
      * Herança e boosting
      */
-    struct __bk_activity    *act_inheritor;          /* Herdeiro de prioridade */
+    struct activity    *act_inheritor;          /* Herdeiro de prioridade */
     BK_UINT8                act_inheritor_prio;      /* Prioridade do herdeiro */
     BK_UINT32               act_inheritor_flags;     /* Flags do herdeiro */
     
@@ -308,14 +308,14 @@ struct __bk_activity {
     /*
      * Callbacks e hooks
      */
-    void                    (*act_on_start)(struct __bk_activity *);
-    void                    (*act_on_complete)(struct __bk_activity *);
-    void                    (*act_on_block)(struct __bk_activity *, BK_UINT8 reason);
-    void                    (*act_on_wake)(struct __bk_activity *);
-    void                    (*act_on_migrate)(struct __bk_activity *, struct __bk_thread *from, struct __bk_thread *to);
-    void                    (*act_on_preempt)(struct __bk_activity *);
-    void                    (*act_on_yield)(struct __bk_activity *);
-    void                    (*act_on_timeout)(struct __bk_activity *);
+    void                    (*act_on_start)(struct activity *);
+    void                    (*act_on_complete)(struct activity *);
+    void                    (*act_on_block)(struct activity *, BK_UINT8 reason);
+    void                    (*act_on_wake)(struct activity *);
+    void                    (*act_on_migrate)(struct activity *, struct __bk_thread *from, struct __bk_thread *to);
+    void                    (*act_on_preempt)(struct activity *);
+    void                    (*act_on_yield)(struct activity *);
+    void                    (*act_on_timeout)(struct activity *);
     
     void                    *act_callback_data;      /* Dados para callbacks */
     
@@ -356,7 +356,7 @@ struct __bk_activity {
     /*
      * Lista de recursos associados
      */
-    BK_LIST_HEAD(__bk_activity_resources) act_resources;
+    BK_LIST_HEAD(activity_resources) act_resources;
     
     /*
      * Vetor de extensões
@@ -365,18 +365,18 @@ struct __bk_activity {
     void                    **act_extensions;
 };
 
-typedef struct __bk_activity BK_ACTIVITY;
+typedef struct activity BK_ACTIVITY;
 
 /*
  * Cabeças de lista para atividades
  */
-BK_LIST_HEAD(__bk_activity_list, __bk_activity);
-BK_TAILQ_HEAD(__bk_activity_queue, __bk_activity);
+BK_LIST_HEAD(activity_list, activity);
+BK_TAILQ_HEAD(activity_queue, activity);
 
 /*
  * Estatísticas da atividade
  */
-struct __bk_activity_stats {
+struct activity_stats {
     BK_UINT64               as_total_activities;
     BK_UINT64               as_active_activities;
     BK_UINT64               as_completed_activities;
@@ -442,4 +442,4 @@ BK_BOOLEAN bk_activity_is_completed(BK_ACTIVITY *act);
 BK_BOOLEAN bk_activity_is_running(BK_ACTIVITY *act);
 BK_BOOLEAN bk_activity_is_blocked(BK_ACTIVITY *act);
 
-void bk_activity_get_stats(BK_ACTIVITY *act, struct __bk_activity_stats *stats);
+void bk_activity_get_stats(BK_ACTIVITY *act, struct activity_stats *stats);
