@@ -147,9 +147,9 @@ enum bexec_segment_type {
 	BEXEC_SEG_DATA		= 2,	/* Dados inicializados */
 	BEXEC_SEG_BSS		= 3,	/* Dados não inicializados */
 	BEXEC_SEG_RODATA	= 4,	/* Dados somente leitura */
-	BEXEC_SEG_STACK		= 5,	/* Stack */
-	BEXEC_SEG_HEAP		= 6,	/* Heap */
-	BEXEC_SEG_TLS		= 7,	/* Thread Local Storage */
+	BEXEC_SEG_STACK2	= 5,	/* Stack */
+	BEXEC_SEG_HEAP2		= 6,	/* Heap */
+	BEXEC_SEG_TLS2		= 7,	/* Thread Local Storage */
 	BEXEC_SEG_SYSCALL_TABLE	= 8,	/* Tabela de syscalls */
 	BEXEC_SEG_IMPORT_TABLE	= 9,	/* Tabela de importações */
 	BEXEC_SEG_EXPORT_TABLE	= 10,	/* Tabela de exportações */
@@ -401,7 +401,7 @@ struct bexec_symbol {
 struct bexec_reloc {
 	BK_UINT64		r_offset;	/* Offset para relocar */
 	BK_UINT64	_r_info;	/* Tipo e índice do símbolo */
-	BK_INT64		r_addend;	/* Addend */
+	__BK_S16		r_addend;	/* Addend */
 };
 
 /* Macros para r_info */
