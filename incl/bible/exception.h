@@ -27,7 +27,7 @@
  */
 
 /* Hierarquia de exceções (usando 16 bits como outros registros) */
-typedef enum __BK_ENUM_UINT16(exception_class) {
+typedef enum __BK_ENUM_EXCEPTIONS_UINT16 {
 	/* Exceções de hardware (0x1000-0x10FF) */
 	BK_EXCEPTION_CLASS_HW_BASE		= 0x1000,
 	
@@ -154,7 +154,7 @@ typedef enum __BK_ENUM_UINT16(exception_class) {
 	BK_EXCEPTION_NO_SYS			= 0x170B,	/* Função não implementada */
 	BK_EXCEPTION_INVALID_ARGUMENT		= 0x170C,	/* Argumento inválido */
 	BK_EXCEPTION_RANGE			= 0x170D,	/* Valor fora de faixa */
-	BK_EXCEPTION_OVERFLOW			= 0x170E,	/* Overflow */
+	BK_EXCEPTION_KOVERFLOW			= 0x170E,	/* Overflow */
 	BK_EXCEPTION_UNDERFLOW			= 0x170F,	/* Underflow */
 	
 	/* Exceções de usuário (0xF000-0xFFFF) */
