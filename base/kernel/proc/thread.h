@@ -6,6 +6,7 @@
 # include <bible/ipc.h>
 # include <bible/interrupt.h>
 # include <bible/exception.h>
+# include <proc/activity.h>
 # include <bible/kernl_object.h>
 # include <bible/ktypes.h>
 
