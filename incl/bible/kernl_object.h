@@ -3,11 +3,17 @@
 
 #include <bible/cdefs.h>
 #include <bible/types.h>
+#include <bible/ktypes.h>
+#include <bible/regsister.h>
+#include <bible/task.h>
+#include <bible/vm.h>
 #include <bible/queue.h>
 
+#define NULL 0
+/* ID inválido (usado para indicar erro ou objeto não existente) */
+#define BK_ID_INVALID       ((BK_ID)0)
 /*
- * SPDX-License-Identifier: MIT License
- * see src/LICENSE
+ * SPDX-License-Identifier: MIT
  *
  * Copyright (c) 2024 Bible System Developers
  * Todos os direitos reservados.
@@ -585,6 +591,5 @@ BK_I32 bk_object_unregister_callback(BK_OBJ_TYPE type, BK_UINT32 event_mask,
 #define BK_OBJECT_ENOTSUP		10	/* Não suportado */
 #define BK_OBJECT_EINVALIDTYPE		11	/* Tipo inválido */
 #define BK_OBJECT_ECORRUPT		12	/* Objeto corrompido */
-
 
 #endif /* !_BIBLE_KERNL_OBJECT_H_ */
