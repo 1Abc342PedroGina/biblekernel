@@ -20,6 +20,9 @@
 #include <bible/regsister.h>
 #include <bible/task.h>
 #include <bible/exception.h>
+#include <bible/ipc.h>
+#include <bible/vm.h>
+#include <bible/pmap.h>
 
 /*
  * ============================================================================
@@ -49,7 +52,7 @@ typedef enum {
  * ============================================================================
  */
 
-typedef enum __BK_ENUM_UINT16(interrupt_type) {
+typedef enum __BK_ENUM_INTERRUPT_UINT16{
 	/* Interrupções de hardware (0x2000-0x20FF) */
 	BK_INTERRUPT_TYPE_HW_BASE		= 0x2000,
 	
@@ -379,7 +382,7 @@ struct bk_interrupt_handler {
 				BK_INTERRUPT_CONTEXT *context);
 	
 	/* Chain */
-	BK_INTERRUPT_HANDLER		*next;		/* Próximo na cadeia */
+	struct bk_interrupt_handler		*next;		/* Próximo na cadeia */
 	BK_BOOLEAN			chain_end;	/* Se for o último, chama default */
 	
 	/* Estatísticas */
