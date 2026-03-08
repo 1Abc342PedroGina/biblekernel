@@ -102,10 +102,10 @@ struct __bk_mmsupport_full {
 };
 
 /*
- * ALPC_PROCESS_CONTEXT - Contexto ALPC
+ * KSPC_PROCESS_CONTEXT - Contexto KSPC
  */
-struct __bk_alpc_process_context {
-    BK_ID                   ac_port;                     /* Porto ALPC */
+struct __bk_kspc_process_context {
+    BK_ID                   kc_port;                     /* Porto KSPC*/
     BK_LIST_ENTRY           ac_connection_list;          /* Lista de conexões */
     BK_SPINLOCK             ac_lock;                     /* Lock */
 };
@@ -467,9 +467,9 @@ struct __bk_process {
     BK_UINT64                proc_vad_physical_pages_limit;       /* VadPhysicalPagesLimit */
     
     /*
-     * ALPC (0x580 - 0x5a0)
+     * KSPC (0x580 - 0x5a0)
      */
-    struct __bk_alpc_process_context proc_alpc_context;           /* AlpcContext */
+    struct __bk_kspc_process_context proc_kspc_context;           /* KspcContext */
     
     /*
      * Timer resolution (0x5a0 - 0x5c0)
