@@ -48,6 +48,17 @@ typedef BK_REGISTER_HANDLE OSD_TRANSACTION_HANDLE; /* Handle para transação */
 #define OSD_HANDLE_NULL      BK_REGISTER_NULL
 #define OSD_HANDLE_INVALID   BK_REGISTER_INVALID
 
+
+#ifndef __BK_KERN
+#undef OSD_FS_BOFS
+#undef OSD_FS_BIBLEFS
+#endif
+
+#ifndef KERNEL
+#undef OSD_FS_BOFS
+#undef OSD_FS_BIBLEFS
+#endif
+
 /*
  * ============================================================================
  * SISTEMAS DE ARQUIVOS
