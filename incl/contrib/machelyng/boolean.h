@@ -11,6 +11,7 @@
 #ifndef	_MACHELYNG_BOOLEAN_H_
 #define _MACHELYNG_BOOLEAN_H_
 
+#ifdef DRIVER_MACHELYNG
 typedef int		boolean_t;
 
 #ifndef	TRUE
@@ -20,5 +21,5 @@ typedef int		boolean_t;
 #ifndef	FALSE
 #define FALSE	 0
 #endif	/* FALSE */
-
+#endif /* DRIVER_MACHELYNG */
 #endif /* _MACHELYNG_BOOLEAN_H _ */
