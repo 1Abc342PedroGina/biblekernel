@@ -726,6 +726,10 @@
 #define __biblead2 __attribute__((__noreturn__))
 #define BK_SYSCALL_ERROR_BIT (1ULL << 63)
 
+#define BIBLE_FCPROC                 10701
+/* é o mesmo que FPROC, Mas com a capacidade de criar subsistencias */]
+    
+
 __BK_BEGIN_DECLS
 
 BK_QUAD bk_syscall(BK_REGISTER number, ...);
