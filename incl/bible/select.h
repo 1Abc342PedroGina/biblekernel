@@ -3,6 +3,9 @@
 
 #include <bible/cdefs.h>
 #include <bible/types.h>
+#include <bible/ktypes.h>
+#include <bible/task.h>
+
 
 /*
  * SPDX-License-Identifier: MIT License
@@ -102,7 +105,7 @@ BK_I32 bk_select(BK_I32 nfds, BK_FD_SET *readfds, BK_FD_SET *writefds,
  */
 BK_I32 bk_pselect(BK_I32 nfds, BK_FD_SET *readfds, BK_FD_SET *writefds,
 		  BK_FD_SET *exceptfds, const BK_TIMESPEC *timeout,
-		  const __bk_sigset_t *sigmask);
+		  const BK_SIGSET *sigmask);
 
 /*
  * bk_poll() - Poll de descritores de arquivo
@@ -124,8 +127,8 @@ __BK_END_DECLS
  */
 struct __bk_pollfd {
 	BK_I32	fd;		/* Descritor de arquivo */
-	BK_I16	events;		/* Eventos solicitados */
-	BK_I16	revents;	/* Eventos ocorridos */
+	__BK_S16	events;		/* Eventos solicitados */
+	__BK_S16	revents;	/* Eventos ocorridos */
 };
 
 typedef struct __bk_pollfd BK_POLLFD;
@@ -148,7 +151,12 @@ typedef struct __bk_pollfd BK_POLLFD;
 static __BK_ALWAYS_INLINE void
 BK_FD_COPY(const BK_FD_SET *src, BK_FD_SET *dst)
 {
-	BK_MEMCPY(dst, src, sizeof(BK_FD_SET));
+	do { \
+    BK_SIZE __i; \
+    for (__i = 0; __i < _BK_FDSETWORDS; __i++) \
+        (dst)->fds_bits[__i] = (src)->fds_bits[__i]; \
+} while (0);
+
 }
 
 static __BK_ALWAYS_INLINE BK_BOOLEAN
@@ -258,6 +266,5 @@ BK_FD_COUNT(const BK_FD_SET *set)
 #define	poll			bk_poll
 
 #endif /* !_BK_NO_COMPAT */
-
 
 #endif /* !_BIBLE_SELECT_H_ */
